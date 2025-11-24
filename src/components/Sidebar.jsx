@@ -36,12 +36,27 @@ export default function Sidebar() {
               to="/users" 
               className={`flex items-center gap-3 p-3 rounded-lg transition-colors duration-200 ${
                 isActive('/users')
-                        ? 'bg-indigo-500/20 text-indigo-300' 
-                        : 'hover:bg-white/5 text-gray-300'
+                  ? 'bg-indigo-500/20 text-indigo-300' 
+                  : 'hover:bg-white/5 text-gray-300'
               }`}
             >
               <span>👥</span> 
               <span>Users</span>
+            </Link>
+          </li>
+
+          {/* ✅ NEW: Academy Tab */}
+          <li>
+            <Link 
+              to="/academy" 
+              className={`flex items-center gap-3 p-3 rounded-lg transition-colors duration-200 ${
+                isActive('/academy')
+                  ? 'bg-cyan-500/20 text-cyan-300' 
+                  : 'hover:bg-white/5 text-gray-300'
+              }`}
+            >
+              <span>🎓</span> 
+              <span>Academy</span>
             </Link>
           </li>
 
@@ -100,8 +115,6 @@ export default function Sidebar() {
           </li>
         </ul>
       </nav>
-
-
     </aside>
   );
 }

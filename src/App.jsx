@@ -15,6 +15,8 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import Breathing from "./pages/Breathing";
 import Walking from "./pages/Walking";
+import Academy from "./pages/Academy";
+
 import { UsersProvider } from "./context/UsersContext";
 
 export default function App() {
@@ -34,6 +36,7 @@ export default function App() {
             <Route path="/terms-of-use" element={<TermsOfUse />} />
             <Route path="/users/:id/breathing" element={<Breathing />} />
             <Route path="/users/:id/walking" element={<Walking />} />
+            <Route path="/academy" element={<Academy />} />
           </Routes>
         </AdminLayout>
       </Router>
