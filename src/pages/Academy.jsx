@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+
 export default function Media() {
   const [activeTab, setActiveTab] = useState("blogs");
 
@@ -9,13 +10,9 @@ export default function Media() {
   });
 
   const [newItem, setNewItem] = useState({ 
-    title: "", 
     image: "", 
-    link: "", 
-    author: "",
-    category: "",
-    readTime: "",
-    excerpt: ""
+    description: "",
+    author: ""
   });
   
   const [editIndex, setEditIndex] = useState(null);
@@ -52,8 +49,8 @@ export default function Media() {
   }, [mediaData]);
 
   const handleAddOrUpdate = () => {
-    if (!newItem.title.trim() || !newItem.image.trim() || !newItem.link.trim()) {
-      alert("Please fill all required fields!");
+    if (!newItem.image.trim() || !newItem.description.trim() || !newItem.author.trim()) {
+      alert("Please fill all fields!");
       return;
     }
 
@@ -68,13 +65,9 @@ export default function Media() {
     });
 
     setNewItem({ 
-      title: "", 
       image: "", 
-      link: "", 
-      author: "",
-      category: "",
-      readTime: "",
-      excerpt: ""
+      description: "",
+      author: ""
     });
     setEditIndex(null);
   };
@@ -88,13 +81,9 @@ export default function Media() {
 
   const handleCancelEdit = () => {
     setNewItem({ 
-      title: "", 
       image: "", 
-      link: "", 
-      author: "",
-      category: "",
-      readTime: "",
-      excerpt: ""
+      description: "",
+      author: ""
     });
     setEditIndex(null);
   };
@@ -108,22 +97,13 @@ export default function Media() {
     }
   };
 
-  const blogCategories = [
-    "Wellness", "Mental Health", "Fitness", "Nutrition", 
-    "Lifestyle", "Recovery", "Mindfulness", "Inspiration"
-  ];
-
   // Reset form based on active tab
   const resetFormForTab = () => {
     if (activeTab === "blogs") {
       setNewItem({ 
-        title: "", 
         image: "", 
-        link: "", 
-        author: "",
-        category: "",
-        readTime: "",
-        excerpt: ""
+        description: "",
+        author: ""
       });
     } else {
       setNewItem({ 
@@ -135,7 +115,7 @@ export default function Media() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-900">      
+    <div className="flex min-h-screen">      
       <main className="flex-1 ml-50 p-8 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-bold mb-2 text-white">
@@ -188,84 +168,16 @@ export default function Media() {
                   }`}
             </h3>
 
-            {/* Blog Specific Form */}
+            {/* Blog Specific Form - Only 3 Fields */}
             {activeTab === "blogs" ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div className="md:col-span-2">
-                  <label className="block text-white/80 mb-2 font-medium">
-                    Title *
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter blog title"
-                    value={newItem.title}
-                    onChange={(e) => setNewItem({ ...newItem, title: e.target.value })}
-                    className="w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 placeholder-white/40"
-                  />
-                </div>
-
+              <div className="grid grid-cols-1 gap-6 mb-6">
                 <div>
                   <label className="block text-white/80 mb-2 font-medium">
-                    Author
+                    Image URL *
                   </label>
                   <input
                     type="text"
-                    placeholder="Enter author name"
-                    value={newItem.author}
-                    onChange={(e) => setNewItem({ ...newItem, author: e.target.value })}
-                    className="w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 placeholder-white/40"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-white/80 mb-2 font-medium">
-                    Category
-                  </label>
-                  <select
-                    value={newItem.category}
-                    onChange={(e) => setNewItem({ ...newItem, category: e.target.value })}
-                    className="w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                  >
-                    <option value="">Select Category</option>
-                    {blogCategories.map(cat => (
-                      <option key={cat} value={cat} className="bg-gray-800">{cat}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-white/80 mb-2 font-medium">
-                    Read Time
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g., 5 min read"
-                    value={newItem.readTime}
-                    onChange={(e) => setNewItem({ ...newItem, readTime: e.target.value })}
-                    className="w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 placeholder-white/40"
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-white/80 mb-2 font-medium">
-                    Excerpt
-                  </label>
-                  <textarea
-                    placeholder="Enter brief description or excerpt"
-                    value={newItem.excerpt}
-                    onChange={(e) => setNewItem({ ...newItem, excerpt: e.target.value })}
-                    rows="3"
-                    className="w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 placeholder-white/40 resize-none"
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-white/80 mb-2 font-medium">
-                    Featured Image URL *
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter image URL"
+                    placeholder="Enter blog image URL"
                     value={newItem.image}
                     onChange={(e) =>
                       setNewItem({ ...newItem, image: e.target.value })
@@ -274,15 +186,28 @@ export default function Media() {
                   />
                 </div>
 
-                <div className="md:col-span-2">
+                <div>
                   <label className="block text-white/80 mb-2 font-medium">
-                    Blog Link *
+                    Description *
+                  </label>
+                  <textarea
+                    placeholder="Enter blog description"
+                    value={newItem.description}
+                    onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
+                    rows="4"
+                    className="w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 placeholder-white/40 resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-white/80 mb-2 font-medium">
+                    Author *
                   </label>
                   <input
                     type="text"
-                    placeholder="Enter blog post URL"
-                    value={newItem.link}
-                    onChange={(e) => setNewItem({ ...newItem, link: e.target.value })}
+                    placeholder="Enter author name"
+                    value={newItem.author}
+                    onChange={(e) => setNewItem({ ...newItem, author: e.target.value })}
                     className="w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 placeholder-white/40"
                   />
                 </div>
@@ -400,7 +325,7 @@ export default function Media() {
                     {item.image && (
                       <img
                         src={item.image}
-                        alt={item.title}
+                        alt={activeTab === "blogs" ? "Blog image" : item.title}
                         className="w-full h-48 object-cover rounded-xl mb-4 border border-white/10"
                       />
                     )}
@@ -408,73 +333,50 @@ export default function Media() {
                     {/* Blog Specific Content */}
                     {activeTab === "blogs" && (
                       <>
-                        <div className="flex items-center gap-2 mb-3">
-                          {item.category && (
-                            <span className="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-xs font-medium">
-                              {item.category}
-                            </span>
-                          )}
-                          {item.readTime && (
-                            <span className="bg-pink-500/20 text-pink-300 px-3 py-1 rounded-full text-xs font-medium">
-                              {item.readTime}
-                            </span>
-                          )}
-                        </div>
-
-                        <h4 className="font-bold text-white text-xl mb-2 line-clamp-2">
-                          {item.title}
-                        </h4>
-
-                        {item.author && (
-                          <p className="text-white/60 text-sm mb-2">
-                            By {item.author}
-                          </p>
-                        )}
-
-                        {item.excerpt && (
-                          <p className="text-white/70 text-sm mb-4 line-clamp-3">
-                            {item.excerpt}
-                          </p>
-                        )}
+                        <p className="text-white/70 text-sm mb-3 line-clamp-3">
+                          {item.description}
+                        </p>
+                        <p className="text-white/60 text-sm">
+                          By {item.author}
+                        </p>
                       </>
                     )}
 
                     {/* Audio Books & E-Books Content */}
                     {activeTab !== "blogs" && (
-                      <h4 className="font-bold text-white text-xl mb-2">
-                        {item.title}
-                      </h4>
+                      <>
+                        <h4 className="font-bold text-white text-xl mb-2">
+                          {item.title}
+                        </h4>
+                        <a
+                          href={item.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`cursor-pointer text-sm font-medium inline-flex items-center gap-2 transition-colors ${
+                            activeTab === "audiobooks"
+                              ? "text-cyan-400 hover:text-cyan-300"
+                              : "text-green-400 hover:text-green-300"
+                          }`}
+                        >
+                          <span>🔗</span>
+                          View Details
+                        </a>
+                      </>
                     )}
 
-                    <div className="flex justify-between items-center mt-4 pt-4 border-t border-white/10">
-                      <a
-                        href=""
-                        rel="noopener noreferrer"
-                        className={`cursor-pointer text-sm font-medium inline-flex items-center gap-2 transition-colors ${
-                          activeTab === "blogs"
-                            ? "text-purple-400 hover:text-purple-300"
-                            : activeTab === "audiobooks"
-                            ? "text-cyan-400 hover:text-cyan-300"
-                            : "text-green-400 hover:text-green-300"
-                        }`}
+                    <div className="flex gap-3 mt-4 pt-4 border-t border-white/10">
+                      <button
+                        onClick={() => handleEdit(index)}
+                        className="cursor-pointer flex items-center gap-2 text-yellow-400 hover:text-yellow-300 text-sm font-medium transition-colors"
                       >
-                        <span>🔗Read Blog</span>
-                      
-                      </a>
-                      <div className="flex gap-3">
-                        <button
-                          onClick={() => handleEdit(index)}
-                          className="cursor-pointer flex items-center gap-2 text-yellow-400 hover:text-yellow-300 text-sm font-medium transition-colors"
-                        >
-                          <span>✏️</span> Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(index)}
-                          className="cursor-pointer flex items-center gap-2 text-red-400 hover:text-red-300 text-sm font-medium transition-colors"
-                        >
-                          <span>🗑️</span> Delete
-                        </button>
-                      </div>
+                        <span>✏️</span> Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(index)}
+                        className="cursor-pointer flex items-center gap-2 text-red-400 hover:text-red-300 text-sm font-medium transition-colors"
+                      >
+                        <span>🗑️</span> Delete
+                      </button>
                     </div>
                   </div>
                 ))}

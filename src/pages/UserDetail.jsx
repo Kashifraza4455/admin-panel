@@ -79,9 +79,24 @@ export default function UserDetail() {
     navigate(`/users/${user.id}/breathing`);
   };
 
-  // ✅ NEW: Walking Activities Handler
+  // ✅ Walking Activities Handler
   const handleWalkingClick = () => {
     navigate(`/users/${user.id}/walking`);
+  };
+
+  // ✅ Activities Handler
+  const handleActivitiesClick = () => {
+    navigate(`/users/${user.id}/activities`);
+  };
+
+  // ✅ NEW: Achievements Handler
+  const handleAchievementsClick = () => {
+    navigate(`/users/${user.id}/achievements`);
+  };
+
+  // ✅ Privacy Policy Handler
+  const handlePrivacyPolicyClick = () => {
+    navigate(`/users/${user.id}/privacy-policy`);
   };
 
   if (!user) return <p className="p-6 text-red-500 font-semibold">User not found</p>;
@@ -255,7 +270,7 @@ export default function UserDetail() {
         </div>
       )}
 
-      {/* ✅ Full Width Buttons - WITH WALKING BUTTON ADDED */}
+      {/* ✅ Full Width Buttons - WITH ACHIEVEMENTS BUTTON ADDED */}
       <div className="space-y-4">
         {/* Recovery History Button */}
         <button
@@ -293,13 +308,40 @@ export default function UserDetail() {
           Breathing Activities & Exercises
         </button>
 
-        {/* ✅ NEW: Walking Activities Button */}
+        {/* Walking Activities Button */}
         <button
           onClick={handleWalkingClick}
           className="w-full py-4 px-6 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-3"
         >
           <span className="text-2xl">🚶‍♂️</span>
           Walking Activities & Progress
+        </button>
+
+        {/* ✅ NEW: Achievements Button */}
+        <button
+          onClick={handleAchievementsClick}
+          className="w-full py-4 px-6 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-3"
+        >
+          <span className="text-2xl">🏅</span>
+          View Achievements & Milestones
+        </button>
+
+        {/* Activities Button */}
+        <button
+          onClick={handleActivitiesClick}
+          className="w-full py-4 px-6 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-3"
+        >
+          <span className="text-2xl">🏆</span>
+          View User Activities & Progress
+        </button>
+
+        {/* Privacy Policy Button */}
+        <button
+          onClick={handlePrivacyPolicyClick}
+          className="w-full py-4 px-6 bg-gradient-to-r from-gray-600 to-slate-700 hover:from-gray-700 hover:to-slate-800 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-3"
+        >
+          <span className="text-2xl">🔒</span>
+          Privacy Policy & Data Protection
         </button>
       </div>
 

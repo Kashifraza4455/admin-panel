@@ -11,6 +11,16 @@ export function UsersProvider({ children }) {
       days: 120, // actual days completed
       targetDays: 150, // user expected recover in 150 days
       activities: ["Daily Exercise", "Meditation", "Counseling"],
+       achievements: [
+    {
+      title: "7 Days Streak",
+      description: "Completed 7 continuous days of recovery."
+    },
+    {
+      title: "First Breathing Session",
+      description: "Completed first guided breathing activity."
+    }
+  ]
     },
     {
       id: 2,
@@ -19,6 +29,16 @@ export function UsersProvider({ children }) {
       days: 12,
       targetDays: 30,
       activities: [],
+       achievements: [
+    {
+      title: "7 Days Streak",
+      description: "Completed 7 continuous days of recovery."
+    },
+    {
+      title: "First Breathing Session",
+      description: "Completed first guided breathing activity."
+    }
+  ]
     },
     {
       id: 3,
@@ -27,6 +47,16 @@ export function UsersProvider({ children }) {
       days: 200,
       targetDays: 180,
       activities: ["Support Group", "Therapy", "Journaling"],
+       achievements: [
+    {
+      title: "7 Days Streak",
+      description: "Completed 7 continuous days of recovery."
+    },
+    {
+      title: "First Breathing Session",
+      description: "Completed first guided breathing activity."
+    }
+  ]
     },
     {
       id: 4,
@@ -35,6 +65,16 @@ export function UsersProvider({ children }) {
       days: 5,
       targetDays: 60,
       activities: [],
+       achievements: [
+    {
+      title: "7 Days Streak",
+      description: "Completed 7 continuous days of recovery."
+    },
+    {
+      title: "First Breathing Session",
+      description: "Completed first guided breathing activity."
+    }
+  ]
     },
   ]);
 

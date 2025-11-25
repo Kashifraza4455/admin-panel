@@ -45,18 +45,33 @@ export default function Sidebar() {
             </Link>
           </li>
 
-          {/* ✅ NEW: Academy Tab */}
+          {/* ✅ Academy Tab */}
           <li>
             <Link 
               to="/academy" 
               className={`flex items-center gap-3 p-3 rounded-lg transition-colors duration-200 ${
                 isActive('/academy')
-                  ? 'bg-cyan-500/20 text-cyan-300' 
+                  ? 'bg-indigo-500/20 text-indigo-300' 
                   : 'hover:bg-white/5 text-gray-300'
               }`}
             >
               <span>🎓</span> 
               <span>Academy</span>
+            </Link>
+          </li>
+
+          {/* ✅ NEW: Leaderboard Tab */}
+          <li>
+            <Link 
+              to="/leaderboard" 
+              className={`flex items-center gap-3 p-3 rounded-lg transition-colors duration-200 ${
+                isActive('/leaderboard')
+                  ? 'bg-indigo-500/20 text-indigo-300' 
+                  : 'hover:bg-white/5 text-gray-300'
+              }`}
+            >
+              <span>🏆</span> 
+              <span>Leaderboard</span>
             </Link>
           </li>
 
