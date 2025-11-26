@@ -19,7 +19,6 @@ import Academy from "./pages/Academy";
 import Leaderboard from "./pages/Leaderboard";
 import UserAchievements from "./pages/UserAchievements";
 import UserActivities from "./pages/UserActivities";
-import UserPrivacyPolicy from "./pages/UserPrivacyPolicy";
 import { UsersProvider } from "./context/UsersContext";
 
 export default function App() {
@@ -43,7 +42,6 @@ export default function App() {
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/users/:id/achievements" element={<UserAchievements />} />
             <Route path="/users/:id/activities" element={<UserActivities />} />
-            <Route path="/users/:id/privacy-policy" element={<UserPrivacyPolicy />} />
           </Routes>
         </AdminLayout>
       </Router>

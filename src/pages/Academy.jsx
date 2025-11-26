@@ -16,7 +16,15 @@ export default function Media() {
   });
   
   const [editIndex, setEditIndex] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isFileUploading, setIsFileUploading] = useState(false);
   const isInitialLoad = useRef(true);
+
+  // File input references
+  const audioImageInputRef = useRef(null);
+  const ebookImageInputRef = useRef(null);
+  const audioFileInputRef = useRef(null);
+  const ebookFileInputRef = useRef(null);
 
   // Load from localStorage
   useEffect(() => {
@@ -48,10 +56,92 @@ export default function Media() {
     }
   }, [mediaData]);
 
-  const handleAddOrUpdate = () => {
-    if (!newItem.image.trim() || !newItem.description.trim() || !newItem.author.trim()) {
-      alert("Please fill all fields!");
+  // Handle IMAGE upload
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file (JPEG, PNG, GIF, etc.)');
       return;
+    }
+
+    setIsUploading(true);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setNewItem(prev => ({
+        ...prev,
+        image: e.target.result
+      }));
+      
+      setIsUploading(false);
+    };
+
+    reader.onerror = () => {
+      alert('Error reading file');
+      setIsUploading(false);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  // Handle FILE upload (for audio/ebook files)
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setIsFileUploading(true);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setNewItem(prev => ({
+        ...prev,
+        fileData: e.target.result,
+        fileName: file.name,
+        fileType: file.type
+      }));
+      
+      setIsFileUploading(false);
+    };
+
+    reader.onerror = () => {
+      alert('Error reading file');
+      setIsFileUploading(false);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  // Trigger image input click
+  const handleImageUploadClick = () => {
+    if (activeTab === "audiobooks") {
+      audioImageInputRef.current?.click();
+    } else if (activeTab === "ebooks") {
+      ebookImageInputRef.current?.click();
+    }
+  };
+
+  // Trigger file input click
+  const handleFileUploadClick = () => {
+    if (activeTab === "audiobooks") {
+      audioFileInputRef.current?.click();
+    } else if (activeTab === "ebooks") {
+      ebookFileInputRef.current?.click();
+    }
+  };
+
+  const handleAddOrUpdate = () => {
+    if (activeTab === "blogs") {
+      if (!newItem.image.trim() || !newItem.description.trim() || !newItem.author.trim()) {
+        alert("Please fill all fields!");
+        return;
+      }
+    } else {
+      if (!newItem.title?.trim() || !newItem.image.trim() || !newItem.fileData) {
+        alert("Please fill all fields and upload a file!");
+        return;
+      }
     }
 
     setMediaData((prev) => {
@@ -64,11 +154,22 @@ export default function Media() {
       return updated;
     });
 
-    setNewItem({ 
-      image: "", 
-      description: "",
-      author: ""
-    });
+    // Reset form based on active tab
+    if (activeTab === "blogs") {
+      setNewItem({ 
+        image: "", 
+        description: "",
+        author: ""
+      });
+    } else {
+      setNewItem({ 
+        title: "", 
+        image: "",
+        fileData: null,
+        fileName: "",
+        fileType: ""
+      });
+    }
     setEditIndex(null);
   };
 
@@ -80,11 +181,22 @@ export default function Media() {
   };
 
   const handleCancelEdit = () => {
-    setNewItem({ 
-      image: "", 
-      description: "",
-      author: ""
-    });
+    // Reset form based on active tab
+    if (activeTab === "blogs") {
+      setNewItem({ 
+        image: "", 
+        description: "",
+        author: ""
+      });
+    } else {
+      setNewItem({ 
+        title: "", 
+        image: "",
+        fileData: null,
+        fileName: "",
+        fileType: ""
+      });
+    }
     setEditIndex(null);
   };
 
@@ -108,8 +220,10 @@ export default function Media() {
     } else {
       setNewItem({ 
         title: "", 
-        image: "", 
-        link: ""
+        image: "",
+        fileData: null,
+        fileName: "",
+        fileType: ""
       });
     }
   };
@@ -168,7 +282,7 @@ export default function Media() {
                   }`}
             </h3>
 
-            {/* Blog Specific Form - Only 3 Fields */}
+            {/* Blog Specific Form - OLD DESIGN (Same as before) */}
             {activeTab === "blogs" ? (
               <div className="grid grid-cols-1 gap-6 mb-6">
                 <div>
@@ -213,7 +327,7 @@ export default function Media() {
                 </div>
               </div>
             ) : (
-              /* Audio Books & E-Books Form (Original Design) */
+              /* Audio Books & E-Books Form - WITH FILE UPLOAD INSTEAD OF LINK */
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div>
                   <label className="block text-white/80 mb-2 font-medium">
@@ -227,31 +341,108 @@ export default function Media() {
                     className="w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 placeholder-white/40"
                   />
                 </div>
+                
+                {/* IMAGE UPLOAD OPTION */}
                 <div>
                   <label className="block text-white/80 mb-2 font-medium">
-                    Image URL *
+                    Cover Image *
                   </label>
+                  
+                  {/* Hidden image file input */}
                   <input
-                    type="text"
-                    placeholder="Enter image URL"
-                    value={newItem.image}
-                    onChange={(e) =>
-                      setNewItem({ ...newItem, image: e.target.value })
-                    }
-                    className="w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 placeholder-white/40"
+                    type="file"
+                    ref={activeTab === "audiobooks" ? audioImageInputRef : ebookImageInputRef}
+                    onChange={handleImageUpload}
+                    accept="image/*"
+                    className="hidden"
                   />
+                  
+                  <button
+                    type="button"
+                    onClick={handleImageUploadClick}
+                    disabled={isUploading}
+                    className={`cursor-pointer flex items-center justify-center gap-2 w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 transition-all duration-300 hover:bg-white/10 ${
+                      activeTab === "audiobooks" 
+                        ? "focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" 
+                        : "focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    }`}
+                  >
+                    {isUploading ? (
+                      <>
+                        <div className={`animate-spin rounded-full h-5 w-5 border-b-2 ${
+                          activeTab === "audiobooks" ? "border-cyan-300" : "border-green-300"
+                        }`}></div>
+                        <span>Uploading...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-lg">🖼️</span>
+                        <span>Upload Image</span>
+                      </>
+                    )}
+                  </button>
+
+                  {/* Image preview */}
+                  {newItem.image && (
+                    <div className="mt-2">
+                      <div className="text-green-400 text-sm mb-1">✅ Image Selected</div>
+                      <div className="w-20 h-20 border border-white/20 rounded-lg overflow-hidden">
+                        <img 
+                          src={newItem.image} 
+                          alt="Preview" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
+
+                {/* FILE UPLOAD OPTION INSTEAD OF LINK FIELD */}
                 <div>
                   <label className="block text-white/80 mb-2 font-medium">
-                    Link *
+                    Choose File *
                   </label>
+                  
+                  {/* Hidden file input */}
                   <input
-                    type="text"
-                    placeholder="Enter link"
-                    value={newItem.link}
-                    onChange={(e) => setNewItem({ ...newItem, link: e.target.value })}
-                    className="w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 placeholder-white/40"
+                    type="file"
+                    ref={activeTab === "audiobooks" ? audioFileInputRef : ebookFileInputRef}
+                    onChange={handleFileUpload}
+                    accept={activeTab === "audiobooks" ? "audio/*" : "application/pdf,application/epub+zip,.pdf,.epub"}
+                    className="hidden"
                   />
+                  
+                  <button
+                    type="button"
+                    onClick={handleFileUploadClick}
+                    disabled={isFileUploading}
+                    className={`cursor-pointer flex items-center justify-center gap-2 w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 transition-all duration-300 hover:bg-white/10 ${
+                      activeTab === "audiobooks" 
+                        ? "focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" 
+                        : "focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    }`}
+                  >
+                    {isFileUploading ? (
+                      <>
+                        <div className={`animate-spin rounded-full h-5 w-5 border-b-2 ${
+                          activeTab === "audiobooks" ? "border-cyan-300" : "border-green-300"
+                        }`}></div>
+                        <span>Uploading...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-lg">📁</span>
+                        <span>Choose File</span>
+                      </>
+                    )}
+                  </button>
+
+                  {/* File name display */}
+                  {newItem.fileName && (
+                    <div className="mt-2 text-green-400 text-sm">
+                      ✅ {newItem.fileName}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -348,19 +539,16 @@ export default function Media() {
                         <h4 className="font-bold text-white text-xl mb-2">
                           {item.title}
                         </h4>
-                        <a
-                          href={item.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`cursor-pointer text-sm font-medium inline-flex items-center gap-2 transition-colors ${
-                            activeTab === "audiobooks"
-                              ? "text-cyan-400 hover:text-cyan-300"
-                              : "text-green-400 hover:text-green-300"
-                          }`}
-                        >
-                          <span>🔗</span>
-                          View Details
-                        </a>
+                        <div className={`flex items-center gap-2 text-sm font-medium ${
+                          activeTab === "audiobooks" ? "text-cyan-400" : "text-green-400"
+                        }`}>
+                          <span>
+                            {activeTab === "audiobooks" ? "🎵" : "📚"}
+                          </span>
+                          <span>
+                            {item.fileName || "Uploaded File"}
+                          </span>
+                        </div>
                       </>
                     )}
 
