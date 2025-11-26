@@ -8,8 +8,8 @@ export function UsersProvider({ children }) {
       id: 1,
       name: "Ahsan Ali",
       status: "Recovered",
-      days: 120, // actual days completed
-      targetDays: 150, // user expected recover in 150 days
+      days: 120, 
+      targetDays: 150, 
       activities: ["Daily Exercise", "Meditation", "Counseling"],
        achievements: [
     {
