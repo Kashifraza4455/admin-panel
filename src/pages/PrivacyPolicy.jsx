@@ -34,6 +34,71 @@ export default function PrivacyPolicySettings() {
     }
   }, []);
 
+  // Mobile-specific editor configuration
+  const getEditorConfig = () => {
+    const isMobile = window.innerWidth < 768;
+    
+    return {
+      height: isMobile ? 'calc(100vh - 20rem)' : 'calc(100vh - 12rem)',
+      menubar: !isMobile,
+      plugins: [
+        'advlist', 'autolink', 'lists', 'link', 'charmap', 'preview',
+        'anchor', 'searchreplace', 'visualblocks', 'fullscreen',
+        'insertdatetime', 'media', 'table', 'help', 'wordcount'
+      ],
+      toolbar: isMobile 
+        ? 'undo redo | bold italic underline | bullist numlist | link | removeformat'
+        : 'undo redo | blocks | bold italic underline forecolor | ' +
+          'alignleft aligncenter alignright alignjustify | ' +
+          'bullist numlist outdent indent | link | removeformat | help',
+      content_style: `
+        body { 
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+          font-size: ${isMobile ? '18px' : '14px'}; 
+          line-height: 1.6;
+          color: #333;
+          -webkit-text-size-adjust: 100%;
+        }
+        h1, h2, h3 { 
+          color: #1e293b;
+          margin-top: 1em;
+          margin-bottom: 0.5em;
+        }
+        p { 
+          margin-bottom: 1em;
+        }
+        ul, ol {
+          margin-bottom: 1em;
+          padding-left: 1.5em;
+        }
+        li {
+          margin-bottom: 0.5em;
+        }
+      `,
+      skin: 'oxide',
+      content_css: 'default',
+      // Remove mobile theme configuration that's causing the error
+      branding: false,
+      statusbar: !isMobile,
+      resize: !isMobile,
+      // Mobile-specific optimizations
+      touch: true,
+      paste_data_images: false,
+      images_upload_url: false,
+      // Better mobile interaction
+      setup: (editor) => {
+        editor.on('init', () => {
+          // Force focus on mobile to ensure keyboard appears
+          if (isMobile) {
+            setTimeout(() => {
+              editor.focus();
+            }, 100);
+          }
+        });
+      }
+    };
+  };
+
   return (
     <main className="flex-1 p-4 lg:p-6 relative">
       {/* Header + Create Button */}
@@ -45,7 +110,7 @@ export default function PrivacyPolicySettings() {
           </h2>
           <button
             onClick={() => setIsEditing(true)}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm lg:text-base w-full sm:w-auto"
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm lg:text-base w-full sm:w-auto active:scale-95 touch-manipulation"
           >
             {privacyPolicy ? 'Edit' : 'Add'}
           </button>
@@ -82,14 +147,14 @@ export default function PrivacyPolicySettings() {
             <div className="flex flex-col sm:flex-row gap-2 lg:gap-3 w-full sm:w-auto">
               <button
                 onClick={() => setIsEditing(false)}
-                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-sm lg:text-base order-2 sm:order-1"
+                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-sm lg:text-base order-2 sm:order-1 active:scale-95 touch-manipulation"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className={`flex items-center justify-center gap-2 px-4 lg:px-5 py-2 rounded-lg text-white font-semibold transition-all text-sm lg:text-base ${
+                className={`flex items-center justify-center gap-2 px-4 lg:px-5 py-2 rounded-lg text-white font-semibold transition-all text-sm lg:text-base active:scale-95 touch-manipulation ${
                   saving
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-green-600 hover:bg-green-700"
@@ -101,55 +166,24 @@ export default function PrivacyPolicySettings() {
             </div>
           </div>
 
-          {/* TinyMCE Editor */}
-          <div className="bg-white rounded-lg overflow-hidden border border-white/20">
+          {/* TinyMCE Editor Container with Mobile Optimizations */}
+          <div className="bg-white rounded-lg overflow-hidden border border-white/20 touch-pan-y">
             <Editor
               apiKey="hem9iglwyjhuhcw8kqok797xtf1ao8ehmuw2ycjx6ygk8umv"
-              onInit={(evt, editor) => editorRef.current = editor}
+              onInit={(evt, editor) => {
+                editorRef.current = editor;
+                // Additional mobile initialization
+                if (window.innerWidth < 768) {
+                  const iframe = editor.iframeElement;
+                  if (iframe) {
+                    iframe.style.minHeight = '400px';
+                    iframe.style.touchAction = 'manipulation';
+                  }
+                }
+              }}
               value={privacyPolicy}
               onEditorChange={(newValue) => setPrivacyPolicy(newValue)}
-              init={{
-                height: window.innerWidth < 1024 ? 'calc(100vh - 16rem)' : 'calc(100vh - 12rem)',
-                menubar: window.innerWidth > 768, // Hide menubar on mobile for more space
-                plugins: [
-                  'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                  'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                  'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
-                ],
-                toolbar: window.innerWidth < 768 
-                  ? 'undo redo | bold italic | bullist numlist | removeformat' // Simplified toolbar for mobile
-                  : 'undo redo | blocks | bold italic forecolor | ' +
-                    'alignleft aligncenter alignright alignjustify | ' +
-                    'bullist numlist outdent indent | removeformat | help',
-                content_style: `
-                  body { 
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-                    font-size: ${window.innerWidth < 768 ? '16px' : '14px'}; 
-                    line-height: 1.6;
-                    color: #333;
-                  }
-                  h1, h2, h3 { 
-                    color: #1e293b;
-                    margin-top: 1em;
-                    margin-bottom: 0.5em;
-                  }
-                  p { 
-                    margin-bottom: 1em;
-                  }
-                  ul, ol {
-                    margin-bottom: 1em;
-                  }
-                `,
-                skin: 'oxide',
-                content_css: 'default',
-                mobile: {
-                  theme: 'mobile',
-                  toolbar: ['undo', 'redo', 'bold', 'italic', 'bullist', 'numlist']
-                },
-                branding: false,
-                statusbar: window.innerWidth > 768,
-                resize: window.innerWidth > 768
-              }}
+              init={getEditorConfig()}
             />
           </div>
 
@@ -157,10 +191,26 @@ export default function PrivacyPolicySettings() {
           <div className="mt-4 p-3 lg:p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
             <h4 className="text-blue-300 font-semibold mb-2 text-sm lg:text-base">TinyMCE Editor Features</h4>
             <div className="text-blue-200 text-xs lg:text-sm">
-              Use the toolbar to format text, add headings, create lists, insert links, and more.
-              {window.innerWidth < 768 && " On mobile, use the simplified toolbar for essential formatting."}
+              {window.innerWidth < 768 ? (
+                <>
+                  <p>• Tap anywhere in the editor to start typing</p>
+                  <p>• Use the toolbar above for formatting</p>
+                  <p>• Pinch to zoom if needed</p>
+                </>
+              ) : (
+                "Use the toolbar to format text, add headings, create lists, insert links, and more."
+              )}
             </div>
           </div>
+
+          {/* Mobile-specific instructions */}
+          {window.innerWidth < 768 && (
+            <div className="mt-3 p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
+              <p className="text-yellow-300 text-xs text-center">
+                💡 Tip: If the editor doesn't respond, try tapping slightly below the toolbar
+              </p>
+            </div>
+          )}
         </div>
       )}
     </main>
