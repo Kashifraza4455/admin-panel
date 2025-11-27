@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Editor } from '@tinymce/tinymce-react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 export default function Media() {
   const [activeTab, setActiveTab] = useState("blogs");
@@ -26,6 +27,36 @@ export default function Media() {
   const ebookImageInputRef = useRef(null);
   const audioFileInputRef = useRef(null);
   const ebookFileInputRef = useRef(null);
+
+  // React Quill modules configuration
+  const modules = {
+    toolbar: [
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      [{ 'font': [] }],
+      [{ 'size': ['small', false, 'large', 'huge'] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'script': 'sub'}, { 'script': 'super' }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'indent': '-1'}, { 'indent': '+1' }],
+      [{ 'align': [] }],
+      ['blockquote', 'code-block'],
+      ['link', 'image', 'video'],
+      ['clean']
+    ],
+  };
+
+  // React Quill formats
+  const formats = [
+    'header', 'font', 'size',
+    'bold', 'italic', 'underline', 'strike',
+    'color', 'background',
+    'script',
+    'list', 'bullet', 'indent',
+    'align',
+    'blockquote', 'code-block',
+    'link', 'image', 'video'
+  ];
 
   // Load from localStorage
   useEffect(() => {
@@ -132,7 +163,7 @@ export default function Media() {
     }
   };
 
-  // Handle TinyMCE editor change for description
+  // Handle React Quill editor change for description
   const handleDescriptionChange = (content) => {
     setNewItem(prev => ({
       ...prev,
@@ -140,7 +171,7 @@ export default function Media() {
     }));
   };
 
-  // Handle TinyMCE editor change for author
+  // Handle React Quill editor change for author
   const handleAuthorChange = (content) => {
     setNewItem(prev => ({
       ...prev,
@@ -245,38 +276,6 @@ export default function Media() {
     }
   };
 
-  // TinyMCE editor configuration
-  const editorConfig = {
-    height: 200,
-    menubar: false,
-    plugins: [
-      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-      'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-      'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
-    ],
-    toolbar: 'undo redo | blocks | bold italic underline | ' +
-      'alignleft aligncenter alignright alignjustify | ' +
-      'bullist numlist outdent indent | ' +
-      'forecolor backcolor | removeformat | help',
-    content_style: `
-      body { 
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; 
-        font-size: 14px; 
-        color: #e5e7eb; 
-        background: #1f2937;
-        line-height: 1.6;
-      }
-      p { margin: 0 0 10px 0; }
-      h1, h2, h3, h4, h5, h6 { color: #f3f4f6; }
-      a { color: #60a5fa; }
-      ul, ol { margin: 0 0 10px 0; padding-left: 20px; }
-    `,
-    skin: 'oxide-dark',
-    content_css: 'dark',
-    branding: false,
-    statusbar: false
-  };
-
   return (
     <div className="flex min-h-screen">      
       <main className="flex-1 lg:ml-50 p-4 lg:p-8 overflow-y-auto">
@@ -332,7 +331,7 @@ export default function Media() {
                   }`}
             </h3>
 
-            {/* Blog Specific Form - WITH TINYMCE EDITORS */}
+            {/* Blog Specific Form - WITH REACT QUILL EDITORS */}
             {activeTab === "blogs" ? (
               <div className="grid grid-cols-1 gap-4 lg:gap-6 mb-4 lg:mb-6">
                 <div>
@@ -354,15 +353,18 @@ export default function Media() {
                   <label className="block text-white/80 mb-2 font-medium text-sm lg:text-base">
                     Description *
                   </label>
-                  <div className="border border-white/20 rounded-lg lg:rounded-xl overflow-hidden">
-                    <Editor
-                      apiKey="hem9iglwyjhuhcw8kqok797xtf1ao8ehmuw2ycjx6ygk8umv"
+                  <div className="border border-white/20 rounded-lg lg:rounded-xl overflow-hidden bg-white">
+                    <ReactQuill
                       value={newItem.description}
-                      onEditorChange={handleDescriptionChange}
-                      init={{
-                        ...editorConfig,
-                        height: window.innerWidth < 768 ? 150 : 200
+                      onChange={handleDescriptionChange}
+                      modules={modules}
+                      formats={formats}
+                      theme="snow"
+                      style={{ 
+                        height: window.innerWidth < 768 ? 150 : 200,
+                        backgroundColor: '#1f2937'
                       }}
+                      placeholder="Write your blog description here..."
                     />
                   </div>
                 </div>
@@ -371,16 +373,25 @@ export default function Media() {
                   <label className="block text-white/80 mb-2 font-medium text-sm lg:text-base">
                     Author *
                   </label>
-                  <div className="border border-white/20 rounded-lg lg:rounded-xl overflow-hidden">
-                    <Editor
-                      apiKey="hem9iglwyjhuhcw8kqok797xtf1ao8ehmuw2ycjx6ygk8umv"
+                  <div className="border border-white/20 rounded-lg lg:rounded-xl overflow-hidden bg-white">
+                    <ReactQuill
                       value={newItem.author}
-                      onEditorChange={handleAuthorChange}
-                      init={{
-                        ...editorConfig,
-                        height: window.innerWidth < 768 ? 100 : 120,
-                        toolbar: 'bold italic underline | forecolor backcolor | removeformat'
+                      onChange={handleAuthorChange}
+                      modules={{
+                        ...modules,
+                        toolbar: [
+                          ['bold', 'italic', 'underline'],
+                          [{ 'color': [] }, { 'background': [] }],
+                          ['clean']
+                        ]
                       }}
+                      formats={['bold', 'italic', 'underline', 'color', 'background']}
+                      theme="snow"
+                      style={{ 
+                        height: window.innerWidth < 768 ? 100 : 120,
+                        backgroundColor: '#1f2937'
+                      }}
+                      placeholder="Enter author name and details..."
                     />
                   </div>
                 </div>

@@ -1,9 +1,41 @@
 import { useState } from "react";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 export default function TermsOfUseSettings() {
   const [termsOfUse, setTermsOfUse] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  // React Quill modules configuration
+  const modules = {
+    toolbar: [
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      [{ 'font': [] }],
+      [{ 'size': ['small', false, 'large', 'huge'] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'script': 'sub'}, { 'script': 'super' }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'indent': '-1'}, { 'indent': '+1' }],
+      [{ 'align': [] }],
+      ['blockquote', 'code-block'],
+      ['link', 'image', 'video'],
+      ['clean']
+    ],
+  };
+
+  // React Quill formats
+  const formats = [
+    'header', 'font', 'size',
+    'bold', 'italic', 'underline', 'strike',
+    'color', 'background',
+    'script',
+    'list', 'bullet', 'indent',
+    'align',
+    'blockquote', 'code-block',
+    'link', 'image', 'video'
+  ];
 
   const handleSave = async () => {
     setSaving(true);
@@ -42,11 +74,10 @@ export default function TermsOfUseSettings() {
 
       {/* Display saved content */}
       {!isEditing && termsOfUse && (
-        <div className="bg-white/5 rounded-xl border border-white/10 p-4 lg:p-6">
-          <pre className="text-gray-300 whitespace-pre-wrap text-sm lg:text-base font-sans leading-relaxed">
-            {termsOfUse}
-          </pre>
-        </div>
+        <div 
+          className="bg-white/5 rounded-xl border border-white/10 p-4 lg:p-6 prose prose-invert max-w-none"
+          dangerouslySetInnerHTML={{ __html: termsOfUse }}
+        />
       )}
 
       {/* Full-page editing area */}
@@ -79,12 +110,19 @@ export default function TermsOfUseSettings() {
             </div>
           </div>
 
-          {/* Textarea Editor */}
-          <textarea
-            value={termsOfUse}
-            onChange={(e) => setTermsOfUse(e.target.value)}
-            className="w-full h-[calc(100vh-12rem)] lg:h-[calc(100vh-12rem)] border border-white/20 rounded-lg lg:rounded-xl p-4 bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none text-sm lg:text-base font-sans leading-relaxed"
-            placeholder="Write your Terms of Use here...
+          {/* React Quill Editor */}
+          <div className="bg-white rounded-lg overflow-hidden border border-white/20">
+            <ReactQuill
+              value={termsOfUse}
+              onChange={setTermsOfUse}
+              modules={modules}
+              formats={formats}
+              theme="snow"
+              style={{ 
+                height: 'calc(100vh - 16rem)',
+                backgroundColor: '#1f2937'
+              }}
+              placeholder="Write your Terms of Use here...
 
 You can include sections like:
 • Acceptance of Terms
@@ -96,18 +134,21 @@ You can include sections like:
 • Governing Law
 
 Start typing your terms of use content..."
-          />
+            />
+          </div>
 
           {/* Editor Tips */}
           <div className="mt-4 p-3 lg:p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
-            <h4 className="text-blue-300 font-semibold mb-2 text-sm lg:text-base">Writing Tips</h4>
+            <h4 className="text-blue-300 font-semibold mb-2 text-sm lg:text-base">Rich Text Editor Features</h4>
             <div className="text-blue-200 text-xs lg:text-sm">
               <ul className="list-disc list-inside space-y-1">
-                <li>Use clear and simple language</li>
-                <li>Break content into sections with headings</li>
-                <li>Include important legal clauses</li>
-                <li>Specify user responsibilities and rights</li>
-                <li>Mention privacy and data usage policies</li>
+                <li><strong>Text Formatting:</strong> Bold, Italic, Underline, Strikethrough</li>
+                <li><strong>Headings:</strong> H1 to H6 for section titles</li>
+                <li><strong>Lists:</strong> Bulleted and Numbered lists</li>
+                <li><strong>Colors:</strong> Text and background colors</li>
+                <li><strong>Alignment:</strong> Left, Center, Right, Justify</li>
+                <li><strong>Blocks:</strong> Quotes and code blocks</li>
+                <li><strong>Media:</strong> Add images and links</li>
               </ul>
             </div>
           </div>

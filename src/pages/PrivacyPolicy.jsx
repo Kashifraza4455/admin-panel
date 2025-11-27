@@ -1,24 +1,50 @@
-import { useState, useRef, useEffect } from "react";
-import { Editor } from "@tinymce/tinymce-react";
+import { useState, useEffect } from "react";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 export default function PrivacyPolicySettings() {
   const [privacyPolicy, setPrivacyPolicy] = useState("");
-  console.log(privacyPolicy);
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
-  const editorRef = useRef(null);
+
+  // React Quill modules configuration
+  const modules = {
+    toolbar: [
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      [{ 'font': [] }],
+      [{ 'size': ['small', false, 'large', 'huge'] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'script': 'sub'}, { 'script': 'super' }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'indent': '-1'}, { 'indent': '+1' }],
+      [{ 'align': [] }],
+      ['blockquote', 'code-block'],
+      ['link', 'image', 'video'],
+      ['clean']
+    ],
+  };
+
+  // React Quill formats
+  const formats = [
+    'header', 'font', 'size',
+    'bold', 'italic', 'underline', 'strike',
+    'color', 'background',
+    'script',
+    'list', 'bullet', 'indent',
+    'align',
+    'blockquote', 'code-block',
+    'link', 'image', 'video'
+  ];
 
   const handleSave = async () => {
     setSaving(true);
-    
-    // Get HTML content directly from editor
-    const htmlContent = privacyPolicy;
     
     // Simulate API call to save HTML content
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Save to localStorage
-    localStorage.setItem('privacyPolicy', htmlContent);
+    localStorage.setItem('privacyPolicy', privacyPolicy);
     
     setSaving(false);
     setIsEditing(false);
@@ -33,71 +59,6 @@ export default function PrivacyPolicySettings() {
       setPrivacyPolicy(saved);
     }
   }, []);
-
-  // Mobile-specific editor configuration
-  const getEditorConfig = () => {
-    const isMobile = window.innerWidth < 768;
-    
-    return {
-      height: isMobile ? 'calc(100vh - 20rem)' : 'calc(100vh - 12rem)',
-      menubar: !isMobile,
-      plugins: [
-        'advlist', 'autolink', 'lists', 'link', 'charmap', 'preview',
-        'anchor', 'searchreplace', 'visualblocks', 'fullscreen',
-        'insertdatetime', 'media', 'table', 'help', 'wordcount'
-      ],
-      toolbar: isMobile 
-        ? 'undo redo | bold italic underline | bullist numlist | link | removeformat'
-        : 'undo redo | blocks | bold italic underline forecolor | ' +
-          'alignleft aligncenter alignright alignjustify | ' +
-          'bullist numlist outdent indent | link | removeformat | help',
-      content_style: `
-        body { 
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-          font-size: ${isMobile ? '18px' : '14px'}; 
-          line-height: 1.6;
-          color: #333;
-          -webkit-text-size-adjust: 100%;
-        }
-        h1, h2, h3 { 
-          color: #1e293b;
-          margin-top: 1em;
-          margin-bottom: 0.5em;
-        }
-        p { 
-          margin-bottom: 1em;
-        }
-        ul, ol {
-          margin-bottom: 1em;
-          padding-left: 1.5em;
-        }
-        li {
-          margin-bottom: 0.5em;
-        }
-      `,
-      skin: 'oxide',
-      content_css: 'default',
-      // Remove mobile theme configuration that's causing the error
-      branding: false,
-      statusbar: !isMobile,
-      resize: !isMobile,
-      // Mobile-specific optimizations
-      touch: true,
-      paste_data_images: false,
-      images_upload_url: false,
-      // Better mobile interaction
-      setup: (editor) => {
-        editor.on('init', () => {
-          // Force focus on mobile to ensure keyboard appears
-          if (isMobile) {
-            setTimeout(() => {
-              editor.focus();
-            }, 100);
-          }
-        });
-      }
-    };
-  };
 
   return (
     <main className="flex-1 p-4 lg:p-6 relative">
@@ -128,15 +89,13 @@ export default function PrivacyPolicySettings() {
 
       {/* Display saved HTML content */}
       {!isEditing && privacyPolicy && (
-        <div className="bg-white/5 rounded-xl border border-white/10 p-4 lg:p-6">
-          <div 
-            className="text-gray-300 prose prose-invert max-w-none text-sm lg:text-base"
-            dangerouslySetInnerHTML={{ __html: privacyPolicy }} 
-          />
-        </div>
+        <div 
+          className="bg-white/5 rounded-xl border border-white/10 p-4 lg:p-6 prose prose-invert max-w-none"
+          dangerouslySetInnerHTML={{ __html: privacyPolicy }} 
+        />
       )}
 
-      {/* Full-page editing area with TinyMCE Editor */}
+      {/* Full-page editing area with React Quill Editor */}
       {isEditing && (
         <div className="fixed inset-0 lg:inset-0 lg:left-72 w-full lg:w-[calc(100%-18rem)] h-screen bg-gradient-to-br from-gray-900 to-gray-800 shadow-2xl p-4 lg:p-6 overflow-auto z-50">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 lg:mb-6">
@@ -166,51 +125,48 @@ export default function PrivacyPolicySettings() {
             </div>
           </div>
 
-          {/* TinyMCE Editor Container with Mobile Optimizations */}
-          <div className="bg-white rounded-lg overflow-hidden border border-white/20 touch-pan-y">
-            <Editor
-              apiKey="hem9iglwyjhuhcw8kqok797xtf1ao8ehmuw2ycjx6ygk8umv"
-              onInit={(evt, editor) => {
-                editorRef.current = editor;
-                // Additional mobile initialization
-                if (window.innerWidth < 768) {
-                  const iframe = editor.iframeElement;
-                  if (iframe) {
-                    iframe.style.minHeight = '400px';
-                    iframe.style.touchAction = 'manipulation';
-                  }
-                }
-              }}
+          {/* React Quill Editor Container */}
+          <div className="bg-white rounded-lg overflow-hidden border border-white/20">
+            <ReactQuill
               value={privacyPolicy}
-              onEditorChange={(newValue) => setPrivacyPolicy(newValue)}
-              init={getEditorConfig()}
+              onChange={setPrivacyPolicy}
+              modules={modules}
+              formats={formats}
+              theme="snow"
+              style={{ 
+                height: 'calc(100vh - 16rem)',
+                backgroundColor: '#1f2937'
+              }}
+              placeholder="Write your Privacy Policy here...
+
+You can include sections like:
+• Information Collection
+• Data Usage
+• Data Protection
+• User Rights
+• Cookies Policy
+• Third-party Services
+• Policy Updates
+
+Start typing your privacy policy content..."
             />
           </div>
 
           {/* Editor Tips */}
           <div className="mt-4 p-3 lg:p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
-            <h4 className="text-blue-300 font-semibold mb-2 text-sm lg:text-base">TinyMCE Editor Features</h4>
+            <h4 className="text-blue-300 font-semibold mb-2 text-sm lg:text-base">Rich Text Editor Features</h4>
             <div className="text-blue-200 text-xs lg:text-sm">
-              {window.innerWidth < 768 ? (
-                <>
-                  <p>• Tap anywhere in the editor to start typing</p>
-                  <p>• Use the toolbar above for formatting</p>
-                  <p>• Pinch to zoom if needed</p>
-                </>
-              ) : (
-                "Use the toolbar to format text, add headings, create lists, insert links, and more."
-              )}
+              <ul className="list-disc list-inside space-y-1">
+                <li><strong>Text Formatting:</strong> Bold, Italic, Underline, Strikethrough</li>
+                <li><strong>Headings:</strong> H1 to H6 for section titles</li>
+                <li><strong>Lists:</strong> Bulleted and Numbered lists</li>
+                <li><strong>Colors:</strong> Text and background colors</li>
+                <li><strong>Alignment:</strong> Left, Center, Right, Justify</li>
+                <li><strong>Blocks:</strong> Quotes and code blocks</li>
+                <li><strong>Media:</strong> Add images and links</li>
+              </ul>
             </div>
           </div>
-
-          {/* Mobile-specific instructions */}
-          {window.innerWidth < 768 && (
-            <div className="mt-3 p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
-              <p className="text-yellow-300 text-xs text-center">
-                💡 Tip: If the editor doesn't respond, try tapping slightly below the toolbar
-              </p>
-            </div>
-          )}
         </div>
       )}
     </main>
