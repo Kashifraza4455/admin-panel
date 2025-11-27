@@ -81,7 +81,7 @@ const Activities = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center p-4">
         <p className="text-red-500 font-semibold text-lg">User not found</p>
       </div>
     );
@@ -91,92 +91,101 @@ const Activities = () => {
   const completedActivities = activities.filter(activity => activity.status === 'Completed').length;
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen p-4 lg:p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-white">
-              Activities & Achievements
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 lg:mb-8">
+          <div className="flex-1">
+            <h1 className="text-2xl lg:text-4xl font-bold text-white">
+              Activities
             </h1>
-            <p className="text-white/80 mt-2 text-lg">
+            <p className="text-white/80 mt-1 lg:mt-2 text-sm lg:text-lg">
               For {user.name} • Track progress and accomplishments
             </p>
           </div>
           <button
             onClick={handleBackClick}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white transition border border-white/20"
+            className="inline-flex items-center justify-center gap-2 px-4 lg:px-6 py-2 lg:py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white transition border border-white/20 text-sm lg:text-base w-full lg:w-auto"
           >
             ← Back
           </button>
         </div>
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-pink-500/10 to-rose-500/10 rounded-2xl p-6 border border-pink-500/20">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6 mb-6 lg:mb-8">
+          <div className="bg-gradient-to-br from-pink-500/10 to-rose-500/10 rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-pink-500/20">
             <div className="text-center">
-              <div className="text-3xl mb-2">🏆</div>
-              <h3 className="text-white font-semibold mb-2">Total Points</h3>
-              <p className="text-pink-300 text-3xl font-bold">{totalPoints}</p>
-              <p className="text-white/60 text-sm">Points earned</p>
+              <div className="text-2xl lg:text-3xl mb-2">🏆</div>
+              <h3 className="text-white font-semibold mb-2 text-sm lg:text-base">Total Points</h3>
+              <p className="text-pink-300 text-xl lg:text-3xl font-bold">{totalPoints}</p>
+              <p className="text-white/60 text-xs lg:text-sm">Points earned</p>
             </div>
           </div>
-          <div className="bg-gradient-to-br from-purple-500/10 to-indigo-500/10 rounded-2xl p-6 border border-purple-500/20">
+          <div className="bg-gradient-to-br from-purple-500/10 to-indigo-500/10 rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-purple-500/20">
             <div className="text-center">
-              <div className="text-3xl mb-2">✅</div>
-              <h3 className="text-white font-semibold mb-2">Activities Completed</h3>
-              <p className="text-purple-300 text-3xl font-bold">{completedActivities}</p>
-              <p className="text-white/60 text-sm">Total activities</p>
+              <div className="text-2xl lg:text-3xl mb-2">✅</div>
+              <h3 className="text-white font-semibold mb-2 text-sm lg:text-base">Activities Completed</h3>
+              <p className="text-purple-300 text-xl lg:text-3xl font-bold">{completedActivities}</p>
+              <p className="text-white/60 text-xs lg:text-sm">Total activities</p>
             </div>
           </div>
-          <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-2xl p-6 border border-blue-500/20">
+          <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-blue-500/20">
             <div className="text-center">
-              <div className="text-3xl mb-2">📊</div>
-              <h3 className="text-white font-semibold mb-2">Success Rate</h3>
-              <p className="text-blue-300 text-3xl font-bold">
+              <div className="text-2xl lg:text-3xl mb-2">📊</div>
+              <h3 className="text-white font-semibold mb-2 text-sm lg:text-base">Success Rate</h3>
+              <p className="text-blue-300 text-xl lg:text-3xl font-bold">
                 {activities.length > 0 ? Math.round((completedActivities / activities.length) * 100) : 0}%
               </p>
-              <p className="text-white/60 text-sm">Completion rate</p>
+              <p className="text-white/60 text-xs lg:text-sm">Completion rate</p>
             </div>
           </div>
         </div>
 
         {/* Activities List */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 shadow-xl p-8">
-          <h2 className="text-2xl font-bold text-white mb-6">Recent Activities</h2>
+        <div className="bg-white/10 backdrop-blur-lg rounded-xl lg:rounded-2xl border border-white/20 shadow-xl p-4 lg:p-8">
+          <h2 className="text-xl lg:text-2xl font-bold text-white mb-4 lg:mb-6">Recent Activities</h2>
           
           {activities.length === 0 ? (
-            <div className="text-center py-12">
-              <span className="text-4xl">📝</span>
-              <p className="text-white/60 text-lg mt-4">No activities recorded yet.</p>
-              <p className="text-white/40 text-sm mt-2">
+            <div className="text-center py-8 lg:py-12">
+              <span className="text-3xl lg:text-4xl">📝</span>
+              <p className="text-white/60 text-base lg:text-lg mt-3 lg:mt-4">No activities recorded yet.</p>
+              <p className="text-white/40 text-sm mt-1 lg:mt-2">
                 Activities will appear here as user completes them
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-3 lg:space-y-4">
               {activities.map(activity => (
                 <div
                   key={activity.id}
-                  className="bg-gradient-to-br from-pink-500/5 to-rose-500/5 rounded-xl p-6 border border-pink-500/10 hover:border-pink-500/20 transition-all duration-300"
+                  className="bg-gradient-to-br from-pink-500/5 to-rose-500/5 rounded-lg lg:rounded-xl p-4 lg:p-6 border border-pink-500/10 hover:border-pink-500/20 transition-all duration-300"
                 >
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 lg:gap-4">
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-white font-bold text-lg">{activity.name}</h3>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getActivityTypeColor(activity.type)}`}>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 lg:gap-3 mb-2">
+                        <h3 className="text-white font-bold text-base lg:text-lg">{activity.name}</h3>
+                        <span className={`px-2 lg:px-3 py-1 rounded-full text-xs font-medium ${getActivityTypeColor(activity.type)} self-start sm:self-auto`}>
                           {activity.type}
                         </span>
                       </div>
-                      <div className="flex items-center gap-4 text-white/60 text-sm">
-                        <span>⏱️ {activity.duration}</span>
-                        <span>📅 {activity.date}</span>
-                        <span className="text-green-400">✅ {activity.status}</span>
+                      <div className="flex flex-wrap items-center gap-2 lg:gap-4 text-white/60 text-xs lg:text-sm">
+                        <span className="flex items-center gap-1">
+                          <span>⏱️</span>
+                          <span>{activity.duration}</span>
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <span>📅</span>
+                          <span>{activity.date}</span>
+                        </span>
+                        <span className="text-green-400 flex items-center gap-1">
+                          <span>✅</span>
+                          <span>{activity.status}</span>
+                        </span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 lg:gap-4 mt-2 md:mt-0">
                       <div className="text-center">
-                        <span className="text-pink-300 font-bold text-xl">{activity.points}</span>
+                        <span className="text-pink-300 font-bold text-lg lg:text-xl">{activity.points}</span>
                         <p className="text-white/60 text-xs">points</p>
                       </div>
                     </div>

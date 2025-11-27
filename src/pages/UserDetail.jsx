@@ -99,65 +99,65 @@ export default function UserDetail() {
     navigate(`/users/${user.id}/privacy-policy`);
   };
 
-  if (!user) return <p className="p-6 text-red-500 font-semibold">User not found</p>;
+  if (!user) return <p className="p-4 lg:p-6 text-red-500 font-semibold text-center">User not found</p>;
 
   const remainingDays = status === "Recovered" ? 0 : Math.max(targetDays - user.days, 0);
   const overDays = status === "Recovered" ? Math.max(user.days - targetDays, 0) : 0;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 shadow-lg">
+    <div className="max-w-4xl mx-auto p-4 lg:p-6 space-y-4 lg:space-y-6 bg-white/10 backdrop-blur-lg rounded-xl lg:rounded-2xl border border-white/20 shadow-lg">
       {/* Header with Actions */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="flex items-center gap-4">
-          <h1 className="text-3xl font-bold text-indigo-300">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl lg:text-3xl font-bold text-indigo-300">
             {user.name} - Details
           </h1>
           {user.isBlocked && (
-            <span className="px-3 py-1 bg-red-500/20 text-red-300 border border-red-500/30 rounded-full text-sm font-semibold">
+            <span className="px-2 lg:px-3 py-1 bg-red-500/20 text-red-300 border border-red-500/30 rounded-full text-xs lg:text-sm font-semibold">
               Blocked
             </span>
           )}
         </div>
         
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 w-full lg:w-auto">
           {!isEditing ? (
             <>
               <button
                 onClick={handleEditClick}
-                className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white transition"
+                className="flex-1 lg:flex-none px-3 lg:px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white transition text-sm lg:text-base"
               >
                 Edit User
               </button>
               
               <button
                 onClick={handleBlockUser}
-                className={`px-4 py-2 rounded-lg transition ${
+                className={`flex-1 lg:flex-none px-3 lg:px-4 py-2 rounded-lg transition text-sm lg:text-base ${
                   user.isBlocked 
                     ? 'bg-yellow-600 hover:bg-yellow-700' 
                     : 'bg-orange-600 hover:bg-orange-700'
                 } text-white`}
               >
-                {user.isBlocked ? 'Unblock User' : 'Block User'}
+                {user.isBlocked ? 'Unblock' : 'Block'}
               </button>
               
               <button
                 onClick={handleDeleteUser}
-                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white transition"
+                className="flex-1 lg:flex-none px-3 lg:px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white transition text-sm lg:text-base"
               >
-                Delete User
+                Delete
               </button>
             </>
           ) : (
-            <div className="flex gap-2">
+            <div className="flex gap-2 w-full lg:w-auto">
               <button
                 onClick={handleStatusChange}
-                className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition"
+                className="flex-1 lg:flex-none px-3 lg:px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition text-sm lg:text-base"
               >
-                Save Changes
+                Save
               </button>
               <button
                 onClick={handleCancelClick}
-                className="px-4 py-2 rounded-lg bg-gray-600 hover:bg-gray-700 text-white transition"
+                className="flex-1 lg:flex-none px-3 lg:px-4 py-2 rounded-lg bg-gray-600 hover:bg-gray-700 text-white transition text-sm lg:text-base"
               >
                 Cancel
               </button>
@@ -167,33 +167,33 @@ export default function UserDetail() {
       </div>
 
       {/* User Information Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
         {/* Basic Info */}
-        <div className="p-4 bg-white/5 rounded-xl border border-white/10 shadow-inner space-y-3">
-          <h2 className="text-xl font-semibold text-indigo-300 mb-3">Basic Information</h2>
-          <p><span className="font-semibold text-white">ID:</span> {user.id}</p>
-          <p><span className="font-semibold text-white">Days Completed:</span> {user.days}</p>
-          <p><span className="font-semibold text-white">Email:</span> {user.email || 'N/A'}</p>
-          <p><span className="font-semibold text-white">Join Date:</span> {user.joinDate || 'N/A'}</p>
+        <div className="p-3 lg:p-4 bg-white/5 rounded-xl border border-white/10 shadow-inner space-y-2 lg:space-y-3">
+          <h2 className="text-lg lg:text-xl font-semibold text-indigo-300 mb-2 lg:mb-3">Basic Information</h2>
+          <p className="text-sm lg:text-base"><span className="font-semibold text-white">ID:</span> {user.id}</p>
+          <p className="text-sm lg:text-base"><span className="font-semibold text-white">Days Completed:</span> {user.days}</p>
+          <p className="text-sm lg:text-base"><span className="font-semibold text-white">Email:</span> {user.email || 'N/A'}</p>
+          <p className="text-sm lg:text-base"><span className="font-semibold text-white">Join Date:</span> {user.joinDate || 'N/A'}</p>
         </div>
 
         {/* Status & Target Days */}
-        <div className="p-4 bg-white/5 rounded-xl border border-white/10 shadow-inner space-y-4">
-          <h2 className="text-xl font-semibold text-indigo-300 mb-3">Recovery Status</h2>
+        <div className="p-3 lg:p-4 bg-white/5 rounded-xl border border-white/10 shadow-inner space-y-3 lg:space-y-4">
+          <h2 className="text-lg lg:text-xl font-semibold text-indigo-300 mb-2 lg:mb-3">Recovery Status</h2>
           
           <div className="space-y-2">
-            <label className="font-semibold text-white block">Status:</label>
+            <label className="font-semibold text-white block text-sm lg:text-base">Status:</label>
             {isEditing ? (
               <select
                 value={status}
                 onChange={e => setStatus(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 border border-white/20 appearance-none cursor-pointer"
+                className="w-full px-3 py-2 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 border border-white/20 appearance-none cursor-pointer text-sm lg:text-base"
               >
                 <option value="Recovered" className="bg-gray-800 text-white">Recovered</option>
                 <option value="Not Recovered" className="bg-gray-800 text-white">Not Recovered</option>
               </select>
             ) : (
-              <div className={`px-3 py-2 rounded-lg ${
+              <div className={`px-3 py-2 rounded-lg text-sm lg:text-base ${
                 status === "Recovered" ? "bg-green-500/20 text-green-300" : "bg-yellow-500/20 text-yellow-300"
               }`}>
                 {status}
@@ -202,18 +202,18 @@ export default function UserDetail() {
           </div>
 
           <div className="space-y-2">
-            <label className="font-semibold text-white block">Target Days:</label>
+            <label className="font-semibold text-white block text-sm lg:text-base">Target Days:</label>
             {isEditing ? (
               <input
                 type="number"
                 value={targetDays}
                 onChange={e => setTargetDays(parseInt(e.target.value) || 0)}
-                className="w-full px-3 py-2 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 border border-white/20 placeholder-gray-400"
+                className="w-full px-3 py-2 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 border border-white/20 placeholder-gray-400 text-sm lg:text-base"
                 min="0"
                 placeholder="Enter target days"
               />
             ) : (
-              <div className="px-3 py-2 rounded-lg bg-white/10 text-white">
+              <div className="px-3 py-2 rounded-lg bg-white/10 text-white text-sm lg:text-base">
                 {targetDays} days
               </div>
             )}
@@ -221,24 +221,24 @@ export default function UserDetail() {
         </div>
 
         {/* Progress & Analytics */}
-        <div className="p-4 bg-white/5 rounded-xl border border-white/10 shadow-inner space-y-3">
-          <h2 className="text-xl font-semibold text-indigo-300 mb-3">Progress Analytics</h2>
+        <div className="p-3 lg:p-4 bg-white/5 rounded-xl border border-white/10 shadow-inner space-y-2 lg:space-y-3">
+          <h2 className="text-lg lg:text-xl font-semibold text-indigo-300 mb-2 lg:mb-3">Progress Analytics</h2>
           
           {status === "Recovered" ? (
             <>
-              <p><span className="font-semibold text-green-300">Recovered in:</span> {user.days} days</p>
+              <p className="text-sm lg:text-base"><span className="font-semibold text-green-300">Recovered in:</span> {user.days} days</p>
               {overDays > 0 ? (
-                <p className="text-red-400"><span className="font-semibold">Over target by:</span> {overDays} days</p>
+                <p className="text-red-400 text-sm lg:text-base"><span className="font-semibold">Over target by:</span> {overDays} days</p>
               ) : (
-                <p className="text-green-400"><span className="font-semibold">Recovered before target by:</span> {Math.max(targetDays - user.days, 0)} days</p>
+                <p className="text-green-400 text-sm lg:text-base"><span className="font-semibold">Recovered before target by:</span> {Math.max(targetDays - user.days, 0)} days</p>
               )}
             </>
           ) : (
-            <p className="text-yellow-300"><span className="font-semibold">Remaining days:</span> {remainingDays}</p>
+            <p className="text-yellow-300 text-sm lg:text-base"><span className="font-semibold">Remaining days:</span> {remainingDays}</p>
           )}
           
-          <div className="mt-4">
-            <div className="flex justify-between text-sm text-white mb-1">
+          <div className="mt-3 lg:mt-4">
+            <div className="flex justify-between text-xs lg:text-sm text-white mb-1">
               <span>Progress</span>
               <span>{user.days}/{targetDays} days</span>
             </div>
@@ -256,13 +256,13 @@ export default function UserDetail() {
 
       {/* Activities Section */}
       {status === "Recovered" && user.activities && user.activities.length > 0 && (
-        <div className="p-4 bg-white/5 rounded-xl border border-white/10 shadow-inner">
-          <h2 className="text-xl font-semibold text-indigo-300 mb-3">
+        <div className="p-3 lg:p-4 bg-white/5 rounded-xl border border-white/10 shadow-inner">
+          <h2 className="text-lg lg:text-xl font-semibold text-indigo-300 mb-2 lg:mb-3">
             Activities that helped recovery
           </h2>
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {user.activities.map((act, i) => (
-              <li key={i} className="px-3 py-2 bg-white/10 rounded-lg text-gray-200 hover:bg-white/20 transition">
+              <li key={i} className="px-3 py-2 bg-white/10 rounded-lg text-gray-200 hover:bg-white/20 transition text-sm lg:text-base">
                 {act}
               </li>
             ))}
@@ -271,76 +271,96 @@ export default function UserDetail() {
       )}
 
       {/* ✅ Full Width Buttons - WITH ACHIEVEMENTS BUTTON ADDED */}
-      <div className="space-y-4">
+      <div className="space-y-3 lg:space-y-4">
         {/* Recovery History Button */}
         <button
           onClick={handleRecoveriesClick}
-          className="w-full py-4 px-6 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-3"
+          className="w-full py-3 lg:py-4 px-4 lg:px-6 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-base lg:text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-2 lg:gap-3"
         >
-          <span className="text-2xl">📊</span>
-          View Recovery History & Analytics
+          <span className="text-xl lg:text-2xl">📊</span>
+          <span className="text-left">
+            <span className="block">View Recovery History</span>
+            <span className="text-xs lg:text-sm font-normal opacity-90">Analytics & Progress Tracking</span>
+          </span>
         </button>
 
         {/* Posts Button */}
         <button
           onClick={handlePostsClick}
-          className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-3"
+          className="w-full py-3 lg:py-4 px-4 lg:px-6 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold text-base lg:text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-2 lg:gap-3"
         >
-          <span className="text-2xl">📝</span>
-          View User Posts & Updates
+          <span className="text-xl lg:text-2xl">📝</span>
+          <span className="text-left">
+            <span className="block">View User Posts</span>
+            <span className="text-xs lg:text-sm font-normal opacity-90">Updates & Journal Entries</span>
+          </span>
         </button>
 
         {/* Financial Summary Button */}
         <button
           onClick={handleFinancialClick}
-          className="w-full py-4 px-6 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-3"
+          className="w-full py-3 lg:py-4 px-4 lg:px-6 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold text-base lg:text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-2 lg:gap-3"
         >
-          <span className="text-2xl">💰</span>
-          View Financial Summary & Expenses
+          <span className="text-xl lg:text-2xl">💰</span>
+          <span className="text-left">
+            <span className="block">Financial Summary</span>
+            <span className="text-xs lg:text-sm font-normal opacity-90">Expenses & Budget Tracking</span>
+          </span>
         </button>
 
         {/* Breathing Activities Button */}
         <button
           onClick={handleBreathingClick}
-          className="w-full py-4 px-6 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-3"
+          className="w-full py-3 lg:py-4 px-4 lg:px-6 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white font-bold text-base lg:text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-2 lg:gap-3"
         >
-          <span className="text-2xl">🌬️</span>
-          Breathing Activities & Exercises
+          <span className="text-xl lg:text-2xl">🌬️</span>
+          <span className="text-left">
+            <span className="block">Breathing Activities</span>
+            <span className="text-xs lg:text-sm font-normal opacity-90">Exercises & Techniques</span>
+          </span>
         </button>
 
         {/* Walking Activities Button */}
         <button
           onClick={handleWalkingClick}
-          className="w-full py-4 px-6 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-3"
+          className="w-full py-3 lg:py-4 px-4 lg:px-6 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold text-base lg:text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-2 lg:gap-3"
         >
-          <span className="text-2xl">🚶‍♂️</span>
-          Walking Activities & Progress
+          <span className="text-xl lg:text-2xl">🚶‍♂️</span>
+          <span className="text-left">
+            <span className="block">Walking Activities</span>
+            <span className="text-xs lg:text-sm font-normal opacity-90">Progress & Tracking</span>
+          </span>
         </button>
 
         {/* ✅ NEW: Achievements Button */}
         <button
           onClick={handleAchievementsClick}
-          className="w-full py-4 px-6 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-3"
+          className="w-full py-3 lg:py-4 px-4 lg:px-6 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white font-bold text-base lg:text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-2 lg:gap-3"
         >
-          <span className="text-2xl">🏅</span>
-          View Achievements & Milestones
+          <span className="text-xl lg:text-2xl">🏅</span>
+          <span className="text-left">
+            <span className="block">View User Achievements</span>
+            <span className="text-xs lg:text-sm font-normal opacity-90">Milestones & Badges</span>
+          </span>
         </button>
 
         {/* Activities Button */}
         <button
           onClick={handleActivitiesClick}
-          className="w-full py-4 px-6 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-3"
+          className="w-full py-3 lg:py-4 px-4 lg:px-6 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold text-base lg:text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border border-white/20 flex items-center justify-center gap-2 lg:gap-3"
         >
-          <span className="text-2xl">🏆</span>
-          View User Activities & Progress
+          <span className="text-xl lg:text-2xl">🏆</span>
+          <span className="text-left">
+            <span className="block">View User Activities</span>
+            <span className="text-xs lg:text-sm font-normal opacity-90">Progress & Engagement</span>
+          </span>
         </button>
-
       </div>
 
       {/* Warning for Blocked Users */}
       {user.isBlocked && (
-        <div className="p-4 bg-red-500/20 border border-red-500/30 rounded-xl">
-          <p className="text-red-300 text-center font-semibold">
+        <div className="p-3 lg:p-4 bg-red-500/20 border border-red-500/30 rounded-xl">
+          <p className="text-red-300 text-center font-semibold text-sm lg:text-base">
             ⚠️ This user is currently blocked and may have restricted access.
           </p>
         </div>

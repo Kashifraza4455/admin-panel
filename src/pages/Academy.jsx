@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Editor } from '@tinymce/tinymce-react';
 
 export default function Media() {
   const [activeTab, setActiveTab] = useState("blogs");
@@ -131,6 +132,22 @@ export default function Media() {
     }
   };
 
+  // Handle TinyMCE editor change for description
+  const handleDescriptionChange = (content) => {
+    setNewItem(prev => ({
+      ...prev,
+      description: content
+    }));
+  };
+
+  // Handle TinyMCE editor change for author
+  const handleAuthorChange = (content) => {
+    setNewItem(prev => ({
+      ...prev,
+      author: content
+    }));
+  };
+
   const handleAddOrUpdate = () => {
     if (activeTab === "blogs") {
       if (!newItem.image.trim() || !newItem.description.trim() || !newItem.author.trim()) {
@@ -228,19 +245,51 @@ export default function Media() {
     }
   };
 
+  // TinyMCE editor configuration
+  const editorConfig = {
+    height: 200,
+    menubar: false,
+    plugins: [
+      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+      'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+      'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+    ],
+    toolbar: 'undo redo | blocks | bold italic underline | ' +
+      'alignleft aligncenter alignright alignjustify | ' +
+      'bullist numlist outdent indent | ' +
+      'forecolor backcolor | removeformat | help',
+    content_style: `
+      body { 
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; 
+        font-size: 14px; 
+        color: #e5e7eb; 
+        background: #1f2937;
+        line-height: 1.6;
+      }
+      p { margin: 0 0 10px 0; }
+      h1, h2, h3, h4, h5, h6 { color: #f3f4f6; }
+      a { color: #60a5fa; }
+      ul, ol { margin: 0 0 10px 0; padding-left: 20px; }
+    `,
+    skin: 'oxide-dark',
+    content_css: 'dark',
+    branding: false,
+    statusbar: false
+  };
+
   return (
     <div className="flex min-h-screen">      
-      <main className="flex-1 ml-50 p-8 overflow-y-auto">
+      <main className="flex-1 lg:ml-50 p-4 lg:p-8 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold mb-2 text-white">
+          <h2 className="text-2xl lg:text-4xl font-bold mb-2 text-white">
             Content Management
           </h2>
-          <p className="text-white/70 mb-8 text-lg">
+          <p className="text-white/70 mb-6 lg:mb-8 text-base lg:text-lg">
             Manage your blogs, audiobooks, and e-books collection
           </p>
 
-          {/* Tabs */}
-          <div className="flex gap-4 mb-8">
+          {/* Tabs - Responsive */}
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-6 lg:mb-8">
             {[
               { id: "blogs", icon: "📝", label: "Blogs" },
               { id: "audiobooks", icon: "🎧", label: "Audio Books" },
@@ -253,7 +302,7 @@ export default function Media() {
                   setEditIndex(null);
                   resetFormForTab();
                 }}
-                className={`cursor-pointer flex items-center gap-3 px-6 py-4 rounded-2xl font-semibold transition-all duration-300 ${
+                className={`cursor-pointer flex items-center justify-center sm:justify-start gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 rounded-xl lg:rounded-2xl font-semibold transition-all duration-300 text-sm sm:text-base ${
                   activeTab === tab.id
                     ? tab.id === "blogs" 
                       ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/25"
@@ -263,14 +312,15 @@ export default function Media() {
                     : "bg-white/10 text-white/80 hover:bg-white/20 backdrop-blur-sm border border-white/10"
                 }`}
               >
-                <span>{tab.icon}</span> {tab.label}
+                <span className="text-base sm:text-lg">{tab.icon}</span> 
+                <span>{tab.label}</span>
               </button>
             ))}
           </div>
 
           {/* Add / Edit Form */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 shadow-xl p-8 mb-8">
-            <h3 className="text-2xl font-bold mb-6 text-white">
+          <div className="bg-white/10 backdrop-blur-lg rounded-xl lg:rounded-2xl border border-white/20 shadow-xl p-4 sm:p-6 lg:p-8 mb-6 lg:mb-8">
+            <h3 className="text-xl lg:text-2xl font-bold mb-4 lg:mb-6 text-white">
               {editIndex !== null
                 ? `Edit ${activeTab.slice(0, -1)}`
                 : `Add New ${
@@ -282,11 +332,11 @@ export default function Media() {
                   }`}
             </h3>
 
-            {/* Blog Specific Form - OLD DESIGN (Same as before) */}
+            {/* Blog Specific Form - WITH TINYMCE EDITORS */}
             {activeTab === "blogs" ? (
-              <div className="grid grid-cols-1 gap-6 mb-6">
+              <div className="grid grid-cols-1 gap-4 lg:gap-6 mb-4 lg:mb-6">
                 <div>
-                  <label className="block text-white/80 mb-2 font-medium">
+                  <label className="block text-white/80 mb-2 font-medium text-sm lg:text-base">
                     Image URL *
                   </label>
                   <input
@@ -296,41 +346,50 @@ export default function Media() {
                     onChange={(e) =>
                       setNewItem({ ...newItem, image: e.target.value })
                     }
-                    className="w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 placeholder-white/40"
+                    className="w-full border border-white/20 bg-white/5 text-white rounded-lg lg:rounded-xl p-3 lg:p-4 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 placeholder-white/40 text-sm lg:text-base"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-white/80 mb-2 font-medium">
+                  <label className="block text-white/80 mb-2 font-medium text-sm lg:text-base">
                     Description *
                   </label>
-                  <textarea
-                    placeholder="Enter blog description"
-                    value={newItem.description}
-                    onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
-                    rows="4"
-                    className="w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 placeholder-white/40 resize-none"
-                  />
+                  <div className="border border-white/20 rounded-lg lg:rounded-xl overflow-hidden">
+                    <Editor
+                      apiKey="hem9iglwyjhuhcw8kqok797xtf1ao8ehmuw2ycjx6ygk8umv"
+                      value={newItem.description}
+                      onEditorChange={handleDescriptionChange}
+                      init={{
+                        ...editorConfig,
+                        height: window.innerWidth < 768 ? 150 : 200
+                      }}
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-white/80 mb-2 font-medium">
+                  <label className="block text-white/80 mb-2 font-medium text-sm lg:text-base">
                     Author *
                   </label>
-                  <input
-                    type="text"
-                    placeholder="Enter author name"
-                    value={newItem.author}
-                    onChange={(e) => setNewItem({ ...newItem, author: e.target.value })}
-                    className="w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 placeholder-white/40"
-                  />
+                  <div className="border border-white/20 rounded-lg lg:rounded-xl overflow-hidden">
+                    <Editor
+                      apiKey="hem9iglwyjhuhcw8kqok797xtf1ao8ehmuw2ycjx6ygk8umv"
+                      value={newItem.author}
+                      onEditorChange={handleAuthorChange}
+                      init={{
+                        ...editorConfig,
+                        height: window.innerWidth < 768 ? 100 : 120,
+                        toolbar: 'bold italic underline | forecolor backcolor | removeformat'
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             ) : (
               /* Audio Books & E-Books Form - WITH FILE UPLOAD INSTEAD OF LINK */
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div>
-                  <label className="block text-white/80 mb-2 font-medium">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-4 lg:mb-6">
+                <div className="md:col-span-2 lg:col-span-1">
+                  <label className="block text-white/80 mb-2 font-medium text-sm lg:text-base">
                     Title *
                   </label>
                   <input
@@ -338,13 +397,13 @@ export default function Media() {
                     placeholder={`Enter ${activeTab.slice(0, -1)} title`}
                     value={newItem.title}
                     onChange={(e) => setNewItem({ ...newItem, title: e.target.value })}
-                    className="w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 placeholder-white/40"
+                    className="w-full border border-white/20 bg-white/5 text-white rounded-lg lg:rounded-xl p-3 lg:p-4 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 placeholder-white/40 text-sm lg:text-base"
                   />
                 </div>
                 
                 {/* IMAGE UPLOAD OPTION */}
                 <div>
-                  <label className="block text-white/80 mb-2 font-medium">
+                  <label className="block text-white/80 mb-2 font-medium text-sm lg:text-base">
                     Cover Image *
                   </label>
                   
@@ -361,7 +420,7 @@ export default function Media() {
                     type="button"
                     onClick={handleImageUploadClick}
                     disabled={isUploading}
-                    className={`cursor-pointer flex items-center justify-center gap-2 w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 transition-all duration-300 hover:bg-white/10 ${
+                    className={`cursor-pointer flex items-center justify-center gap-2 w-full border border-white/20 bg-white/5 text-white rounded-lg lg:rounded-xl p-3 lg:p-4 transition-all duration-300 hover:bg-white/10 text-sm lg:text-base ${
                       activeTab === "audiobooks" 
                         ? "focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" 
                         : "focus:ring-2 focus:ring-green-500 focus:border-green-500"
@@ -369,14 +428,14 @@ export default function Media() {
                   >
                     {isUploading ? (
                       <>
-                        <div className={`animate-spin rounded-full h-5 w-5 border-b-2 ${
+                        <div className={`animate-spin rounded-full h-4 w-4 lg:h-5 lg:w-5 border-b-2 ${
                           activeTab === "audiobooks" ? "border-cyan-300" : "border-green-300"
                         }`}></div>
                         <span>Uploading...</span>
                       </>
                     ) : (
                       <>
-                        <span className="text-lg">🖼️</span>
+                        <span className="text-base lg:text-lg">🖼️</span>
                         <span>Upload Image</span>
                       </>
                     )}
@@ -385,8 +444,8 @@ export default function Media() {
                   {/* Image preview */}
                   {newItem.image && (
                     <div className="mt-2">
-                      <div className="text-green-400 text-sm mb-1">✅ Image Selected</div>
-                      <div className="w-20 h-20 border border-white/20 rounded-lg overflow-hidden">
+                      <div className="text-green-400 text-xs lg:text-sm mb-1">✅ Image Selected</div>
+                      <div className="w-16 h-16 lg:w-20 lg:h-20 border border-white/20 rounded-lg overflow-hidden">
                         <img 
                           src={newItem.image} 
                           alt="Preview" 
@@ -399,7 +458,7 @@ export default function Media() {
 
                 {/* FILE UPLOAD OPTION INSTEAD OF LINK FIELD */}
                 <div>
-                  <label className="block text-white/80 mb-2 font-medium">
+                  <label className="block text-white/80 mb-2 font-medium text-sm lg:text-base">
                     Choose File *
                   </label>
                   
@@ -416,7 +475,7 @@ export default function Media() {
                     type="button"
                     onClick={handleFileUploadClick}
                     disabled={isFileUploading}
-                    className={`cursor-pointer flex items-center justify-center gap-2 w-full border border-white/20 bg-white/5 text-white rounded-xl p-4 transition-all duration-300 hover:bg-white/10 ${
+                    className={`cursor-pointer flex items-center justify-center gap-2 w-full border border-white/20 bg-white/5 text-white rounded-lg lg:rounded-xl p-3 lg:p-4 transition-all duration-300 hover:bg-white/10 text-sm lg:text-base ${
                       activeTab === "audiobooks" 
                         ? "focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" 
                         : "focus:ring-2 focus:ring-green-500 focus:border-green-500"
@@ -424,14 +483,14 @@ export default function Media() {
                   >
                     {isFileUploading ? (
                       <>
-                        <div className={`animate-spin rounded-full h-5 w-5 border-b-2 ${
+                        <div className={`animate-spin rounded-full h-4 w-4 lg:h-5 lg:w-5 border-b-2 ${
                           activeTab === "audiobooks" ? "border-cyan-300" : "border-green-300"
                         }`}></div>
                         <span>Uploading...</span>
                       </>
                     ) : (
                       <>
-                        <span className="text-lg">📁</span>
+                        <span className="text-base lg:text-lg">📁</span>
                         <span>Choose File</span>
                       </>
                     )}
@@ -439,7 +498,7 @@ export default function Media() {
 
                   {/* File name display */}
                   {newItem.fileName && (
-                    <div className="mt-2 text-green-400 text-sm">
+                    <div className="mt-2 text-green-400 text-xs lg:text-sm truncate">
                       ✅ {newItem.fileName}
                     </div>
                   )}
@@ -447,10 +506,10 @@ export default function Media() {
               </div>
             )}
 
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 lg:gap-4">
               <button
                 onClick={handleAddOrUpdate}
-                className={`cursor-pointer flex items-center gap-3 px-8 py-4 rounded-xl font-semibold shadow-lg transition-all duration-300 transform hover:scale-105 ${
+                className={`cursor-pointer flex items-center justify-center gap-2 lg:gap-3 px-6 lg:px-8 py-3 lg:py-4 rounded-xl font-semibold shadow-lg transition-all duration-300 transform hover:scale-105 text-sm lg:text-base ${
                   activeTab === "blogs" 
                     ? "bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white"
                     : activeTab === "audiobooks"
@@ -465,7 +524,7 @@ export default function Media() {
               {editIndex !== null && (
                 <button
                   onClick={handleCancelEdit}
-                  className="cursor-pointer flex items-center gap-3 bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-xl font-semibold border border-white/20 transition-all duration-300"
+                  className="cursor-pointer flex items-center justify-center gap-2 lg:gap-3 bg-white/10 hover:bg-white/20 text-white px-6 lg:px-8 py-3 lg:py-4 rounded-xl font-semibold border border-white/20 transition-all duration-300 text-sm lg:text-base"
                 >
                   <span>❌</span> Cancel
                 </button>
@@ -474,38 +533,38 @@ export default function Media() {
           </div>
 
           {/* Items List */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 shadow-xl p-8">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-bold text-white capitalize">
+          <div className="bg-white/10 backdrop-blur-lg rounded-xl lg:rounded-2xl border border-white/20 shadow-xl p-4 sm:p-6 lg:p-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 lg:mb-6">
+              <h3 className="text-xl lg:text-2xl font-bold text-white capitalize">
                 {activeTab === "blogs" ? "Blog Posts" : activeTab} Collection
               </h3>
-              <span className="text-white/60">
+              <span className="text-white/60 text-sm lg:text-base">
                 {mediaData[activeTab].length} {activeTab === "blogs" ? "posts" : "items"}
               </span>
             </div>
 
             {mediaData[activeTab].length === 0 ? (
-              <div className="text-center py-12">
-                <span className="text-4xl">
+              <div className="text-center py-8 lg:py-12">
+                <span className="text-3xl lg:text-4xl">
                   {activeTab === "blogs" ? "📝" : activeTab === "audiobooks" ? "🎧" : "📖"}
                 </span>
-                <p className="text-white/60 text-lg mt-4">
+                <p className="text-white/60 text-base lg:text-lg mt-3 lg:mt-4">
                   {activeTab === "blogs" ? "No blog posts added yet." : "No items added yet."}
                 </p>
-                <p className="text-white/40 text-sm mt-2">
+                <p className="text-white/40 text-xs lg:text-sm mt-1 lg:mt-2">
                   Add your first item using the form above
                 </p>
               </div>
             ) : (
-              <div className={`grid gap-6 ${
+              <div className={`grid gap-4 lg:gap-6 ${
                 activeTab === "blogs" 
-                  ? "grid-cols-1 md:grid-cols-2" 
-                  : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                  ? "grid-cols-1 lg:grid-cols-2" 
+                  : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
               }`}>
                 {mediaData[activeTab].map((item, index) => (
                   <div
                     key={index}
-                    className={`rounded-2xl p-6 border transition-all duration-300 hover:shadow-lg ${
+                    className={`rounded-xl lg:rounded-2xl p-4 lg:p-6 border transition-all duration-300 hover:shadow-lg ${
                       activeTab === "blogs"
                         ? "bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-500/20 hover:border-purple-500/40 hover:shadow-purple-500/10"
                         : activeTab === "audiobooks"
@@ -517,51 +576,53 @@ export default function Media() {
                       <img
                         src={item.image}
                         alt={activeTab === "blogs" ? "Blog image" : item.title}
-                        className="w-full h-48 object-cover rounded-xl mb-4 border border-white/10"
+                        className="w-full h-32 sm:h-40 lg:h-48 object-cover rounded-lg lg:rounded-xl mb-3 lg:mb-4 border border-white/10"
                       />
                     )}
                     
                     {/* Blog Specific Content */}
                     {activeTab === "blogs" && (
                       <>
-                        <p className="text-white/70 text-sm mb-3 line-clamp-3">
-                          {item.description}
-                        </p>
-                        <p className="text-white/60 text-sm">
-                          By {item.author}
-                        </p>
+                        <div 
+                          className="text-white/70 text-xs lg:text-sm mb-2 lg:mb-3 line-clamp-3 prose prose-invert max-w-none"
+                          dangerouslySetInnerHTML={{ __html: item.description }}
+                        />
+                        <div 
+                          className="text-white/60 text-xs lg:text-sm"
+                          dangerouslySetInnerHTML={{ __html: `By ${item.author}` }}
+                        />
                       </>
                     )}
 
                     {/* Audio Books & E-Books Content */}
                     {activeTab !== "blogs" && (
                       <>
-                        <h4 className="font-bold text-white text-xl mb-2">
+                        <h4 className="font-bold text-white text-lg lg:text-xl mb-1 lg:mb-2 line-clamp-2">
                           {item.title}
                         </h4>
-                        <div className={`flex items-center gap-2 text-sm font-medium ${
+                        <div className={`flex items-center gap-2 text-xs lg:text-sm font-medium ${
                           activeTab === "audiobooks" ? "text-cyan-400" : "text-green-400"
                         }`}>
                           <span>
                             {activeTab === "audiobooks" ? "🎵" : "📚"}
                           </span>
-                          <span>
+                          <span className="truncate">
                             {item.fileName || "Uploaded File"}
                           </span>
                         </div>
                       </>
                     )}
 
-                    <div className="flex gap-3 mt-4 pt-4 border-t border-white/10">
+                    <div className="flex gap-2 lg:gap-3 mt-3 lg:mt-4 pt-3 lg:pt-4 border-t border-white/10">
                       <button
                         onClick={() => handleEdit(index)}
-                        className="cursor-pointer flex items-center gap-2 text-yellow-400 hover:text-yellow-300 text-sm font-medium transition-colors"
+                        className="cursor-pointer flex items-center gap-1 lg:gap-2 text-yellow-400 hover:text-yellow-300 text-xs lg:text-sm font-medium transition-colors"
                       >
                         <span>✏️</span> Edit
                       </button>
                       <button
                         onClick={() => handleDelete(index)}
-                        className="cursor-pointer flex items-center gap-2 text-red-400 hover:text-red-300 text-sm font-medium transition-colors"
+                        className="cursor-pointer flex items-center gap-1 lg:gap-2 text-red-400 hover:text-red-300 text-xs lg:text-sm font-medium transition-colors"
                       >
                         <span>🗑️</span> Delete
                       </button>
