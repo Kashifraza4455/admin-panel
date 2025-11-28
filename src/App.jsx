@@ -40,7 +40,10 @@ export default function App() {
             <Route path="/users/:id/walking" element={<Walking />} />
             <Route path="/academy" element={<Academy />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/users/:id/achievements" element={<UserAchievements />} />
+            <Route
+              path="/users/:id/achievements"
+              element={<UserAchievements />}
+            />
             <Route path="/users/:id/activities" element={<UserActivities />} />
           </Routes>
         </AdminLayout>

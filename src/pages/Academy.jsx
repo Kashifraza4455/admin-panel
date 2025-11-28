@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 export default function Media() {
   const [activeTab, setActiveTab] = useState("blogs");
@@ -11,12 +11,12 @@ export default function Media() {
     ebooks: [],
   });
 
-  const [newItem, setNewItem] = useState({ 
-    image: "", 
+  const [newItem, setNewItem] = useState({
+    image: "",
     description: "",
-    author: ""
+    author: "",
   });
-  
+
   const [editIndex, setEditIndex] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isFileUploading, setIsFileUploading] = useState(false);
@@ -31,31 +31,42 @@ export default function Media() {
   // React Quill modules configuration
   const modules = {
     toolbar: [
-      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-      [{ 'font': [] }],
-      [{ 'size': ['small', false, 'large', 'huge'] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'script': 'sub'}, { 'script': 'super' }],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'indent': '-1'}, { 'indent': '+1' }],
-      [{ 'align': [] }],
-      ['blockquote', 'code-block'],
-      ['link', 'image', 'video'],
-      ['clean']
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      [{ font: [] }],
+      [{ size: ["small", false, "large", "huge"] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ color: [] }, { background: [] }],
+      [{ script: "sub" }, { script: "super" }],
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ indent: "-1" }, { indent: "+1" }],
+      [{ align: [] }],
+      ["blockquote", "code-block"],
+      ["link", "image", "video"],
+      ["clean"],
     ],
   };
 
   // React Quill formats
   const formats = [
-    'header', 'font', 'size',
-    'bold', 'italic', 'underline', 'strike',
-    'color', 'background',
-    'script',
-    'list', 'bullet', 'indent',
-    'align',
-    'blockquote', 'code-block',
-    'link', 'image', 'video'
+    "header",
+    "font",
+    "size",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "color",
+    "background",
+    "script",
+    "list",
+    "bullet",
+    "indent",
+    "align",
+    "blockquote",
+    "code-block",
+    "link",
+    "image",
+    "video",
   ];
 
   // Load from localStorage
@@ -93,8 +104,8 @@ export default function Media() {
     const file = event.target.files[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      alert('Please select an image file (JPEG, PNG, GIF, etc.)');
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file (JPEG, PNG, GIF, etc.)");
       return;
     }
 
@@ -102,16 +113,16 @@ export default function Media() {
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      setNewItem(prev => ({
+      setNewItem((prev) => ({
         ...prev,
-        image: e.target.result
+        image: e.target.result,
       }));
-      
+
       setIsUploading(false);
     };
 
     reader.onerror = () => {
-      alert('Error reading file');
+      alert("Error reading file");
       setIsUploading(false);
     };
 
@@ -127,18 +138,18 @@ export default function Media() {
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      setNewItem(prev => ({
+      setNewItem((prev) => ({
         ...prev,
         fileData: e.target.result,
         fileName: file.name,
-        fileType: file.type
+        fileType: file.type,
       }));
-      
+
       setIsFileUploading(false);
     };
 
     reader.onerror = () => {
-      alert('Error reading file');
+      alert("Error reading file");
       setIsFileUploading(false);
     };
 
@@ -165,28 +176,36 @@ export default function Media() {
 
   // Handle React Quill editor change for description
   const handleDescriptionChange = (content) => {
-    setNewItem(prev => ({
+    setNewItem((prev) => ({
       ...prev,
-      description: content
+      description: content,
     }));
   };
 
   // Handle React Quill editor change for author
   const handleAuthorChange = (content) => {
-    setNewItem(prev => ({
+    setNewItem((prev) => ({
       ...prev,
-      author: content
+      author: content,
     }));
   };
 
   const handleAddOrUpdate = () => {
     if (activeTab === "blogs") {
-      if (!newItem.image.trim() || !newItem.description.trim() || !newItem.author.trim()) {
+      if (
+        !newItem.image.trim() ||
+        !newItem.description.trim() ||
+        !newItem.author.trim()
+      ) {
         alert("Please fill all fields!");
         return;
       }
     } else {
-      if (!newItem.title?.trim() || !newItem.image.trim() || !newItem.fileData) {
+      if (
+        !newItem.title?.trim() ||
+        !newItem.image.trim() ||
+        !newItem.fileData
+      ) {
         alert("Please fill all fields and upload a file!");
         return;
       }
@@ -204,18 +223,18 @@ export default function Media() {
 
     // Reset form based on active tab
     if (activeTab === "blogs") {
-      setNewItem({ 
-        image: "", 
+      setNewItem({
+        image: "",
         description: "",
-        author: ""
+        author: "",
       });
     } else {
-      setNewItem({ 
-        title: "", 
+      setNewItem({
+        title: "",
         image: "",
         fileData: null,
         fileName: "",
-        fileType: ""
+        fileType: "",
       });
     }
     setEditIndex(null);
@@ -231,18 +250,18 @@ export default function Media() {
   const handleCancelEdit = () => {
     // Reset form based on active tab
     if (activeTab === "blogs") {
-      setNewItem({ 
-        image: "", 
+      setNewItem({
+        image: "",
         description: "",
-        author: ""
+        author: "",
       });
     } else {
-      setNewItem({ 
-        title: "", 
+      setNewItem({
+        title: "",
         image: "",
         fileData: null,
         fileName: "",
-        fileType: ""
+        fileType: "",
       });
     }
     setEditIndex(null);
@@ -260,24 +279,24 @@ export default function Media() {
   // Reset form based on active tab
   const resetFormForTab = () => {
     if (activeTab === "blogs") {
-      setNewItem({ 
-        image: "", 
+      setNewItem({
+        image: "",
         description: "",
-        author: ""
+        author: "",
       });
     } else {
-      setNewItem({ 
-        title: "", 
+      setNewItem({
+        title: "",
         image: "",
         fileData: null,
         fileName: "",
-        fileType: ""
+        fileType: "",
       });
     }
   };
 
   return (
-    <div className="flex min-h-screen">      
+    <div className="flex min-h-screen">
       <main className="flex-1 lg:ml-50 p-4 lg:p-8 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl lg:text-4xl font-bold mb-2 text-white">
@@ -303,7 +322,7 @@ export default function Media() {
                 }}
                 className={`cursor-pointer flex items-center justify-center sm:justify-start gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 rounded-xl lg:rounded-2xl font-semibold transition-all duration-300 text-sm sm:text-base ${
                   activeTab === tab.id
-                    ? tab.id === "blogs" 
+                    ? tab.id === "blogs"
                       ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/25"
                       : tab.id === "audiobooks"
                       ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25"
@@ -311,7 +330,7 @@ export default function Media() {
                     : "bg-white/10 text-white/80 hover:bg-white/20 backdrop-blur-sm border border-white/10"
                 }`}
               >
-                <span className="text-base sm:text-lg">{tab.icon}</span> 
+                <span className="text-base sm:text-lg">{tab.icon}</span>
                 <span>{tab.label}</span>
               </button>
             ))}
@@ -360,9 +379,9 @@ export default function Media() {
                       modules={modules}
                       formats={formats}
                       theme="snow"
-                      style={{ 
+                      style={{
                         height: window.innerWidth < 768 ? 150 : 200,
-                        backgroundColor: '#1f2937'
+                        backgroundColor: "#1f2937",
                       }}
                       placeholder="Write your blog description here..."
                     />
@@ -380,16 +399,22 @@ export default function Media() {
                       modules={{
                         ...modules,
                         toolbar: [
-                          ['bold', 'italic', 'underline'],
-                          [{ 'color': [] }, { 'background': [] }],
-                          ['clean']
-                        ]
+                          ["bold", "italic", "underline"],
+                          [{ color: [] }, { background: [] }],
+                          ["clean"],
+                        ],
                       }}
-                      formats={['bold', 'italic', 'underline', 'color', 'background']}
+                      formats={[
+                        "bold",
+                        "italic",
+                        "underline",
+                        "color",
+                        "background",
+                      ]}
                       theme="snow"
-                      style={{ 
+                      style={{
                         height: window.innerWidth < 768 ? 100 : 120,
-                        backgroundColor: '#1f2937'
+                        backgroundColor: "#1f2937",
                       }}
                       placeholder="Enter author name and details..."
                     />
@@ -407,41 +432,51 @@ export default function Media() {
                     type="text"
                     placeholder={`Enter ${activeTab.slice(0, -1)} title`}
                     value={newItem.title}
-                    onChange={(e) => setNewItem({ ...newItem, title: e.target.value })}
+                    onChange={(e) =>
+                      setNewItem({ ...newItem, title: e.target.value })
+                    }
                     className="w-full border border-white/20 bg-white/5 text-white rounded-lg lg:rounded-xl p-3 lg:p-4 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 placeholder-white/40 text-sm lg:text-base"
                   />
                 </div>
-                
+
                 {/* IMAGE UPLOAD OPTION */}
                 <div>
                   <label className="block text-white/80 mb-2 font-medium text-sm lg:text-base">
                     Cover Image *
                   </label>
-                  
+
                   {/* Hidden image file input */}
                   <input
                     type="file"
-                    ref={activeTab === "audiobooks" ? audioImageInputRef : ebookImageInputRef}
+                    ref={
+                      activeTab === "audiobooks"
+                        ? audioImageInputRef
+                        : ebookImageInputRef
+                    }
                     onChange={handleImageUpload}
                     accept="image/*"
                     className="hidden"
                   />
-                  
+
                   <button
                     type="button"
                     onClick={handleImageUploadClick}
                     disabled={isUploading}
                     className={`cursor-pointer flex items-center justify-center gap-2 w-full border border-white/20 bg-white/5 text-white rounded-lg lg:rounded-xl p-3 lg:p-4 transition-all duration-300 hover:bg-white/10 text-sm lg:text-base ${
-                      activeTab === "audiobooks" 
-                        ? "focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" 
+                      activeTab === "audiobooks"
+                        ? "focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
                         : "focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     }`}
                   >
                     {isUploading ? (
                       <>
-                        <div className={`animate-spin rounded-full h-4 w-4 lg:h-5 lg:w-5 border-b-2 ${
-                          activeTab === "audiobooks" ? "border-cyan-300" : "border-green-300"
-                        }`}></div>
+                        <div
+                          className={`animate-spin rounded-full h-4 w-4 lg:h-5 lg:w-5 border-b-2 ${
+                            activeTab === "audiobooks"
+                              ? "border-cyan-300"
+                              : "border-green-300"
+                          }`}
+                        ></div>
                         <span>Uploading...</span>
                       </>
                     ) : (
@@ -455,11 +490,13 @@ export default function Media() {
                   {/* Image preview */}
                   {newItem.image && (
                     <div className="mt-2">
-                      <div className="text-green-400 text-xs lg:text-sm mb-1">✅ Image Selected</div>
+                      <div className="text-green-400 text-xs lg:text-sm mb-1">
+                        ✅ Image Selected
+                      </div>
                       <div className="w-16 h-16 lg:w-20 lg:h-20 border border-white/20 rounded-lg overflow-hidden">
-                        <img 
-                          src={newItem.image} 
-                          alt="Preview" 
+                        <img
+                          src={newItem.image}
+                          alt="Preview"
                           className="w-full h-full object-cover"
                         />
                       </div>
@@ -472,31 +509,43 @@ export default function Media() {
                   <label className="block text-white/80 mb-2 font-medium text-sm lg:text-base">
                     Choose File *
                   </label>
-                  
+
                   {/* Hidden file input */}
                   <input
                     type="file"
-                    ref={activeTab === "audiobooks" ? audioFileInputRef : ebookFileInputRef}
+                    ref={
+                      activeTab === "audiobooks"
+                        ? audioFileInputRef
+                        : ebookFileInputRef
+                    }
                     onChange={handleFileUpload}
-                    accept={activeTab === "audiobooks" ? "audio/*" : "application/pdf,application/epub+zip,.pdf,.epub"}
+                    accept={
+                      activeTab === "audiobooks"
+                        ? "audio/*"
+                        : "application/pdf,application/epub+zip,.pdf,.epub"
+                    }
                     className="hidden"
                   />
-                  
+
                   <button
                     type="button"
                     onClick={handleFileUploadClick}
                     disabled={isFileUploading}
                     className={`cursor-pointer flex items-center justify-center gap-2 w-full border border-white/20 bg-white/5 text-white rounded-lg lg:rounded-xl p-3 lg:p-4 transition-all duration-300 hover:bg-white/10 text-sm lg:text-base ${
-                      activeTab === "audiobooks" 
-                        ? "focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" 
+                      activeTab === "audiobooks"
+                        ? "focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
                         : "focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     }`}
                   >
                     {isFileUploading ? (
                       <>
-                        <div className={`animate-spin rounded-full h-4 w-4 lg:h-5 lg:w-5 border-b-2 ${
-                          activeTab === "audiobooks" ? "border-cyan-300" : "border-green-300"
-                        }`}></div>
+                        <div
+                          className={`animate-spin rounded-full h-4 w-4 lg:h-5 lg:w-5 border-b-2 ${
+                            activeTab === "audiobooks"
+                              ? "border-cyan-300"
+                              : "border-green-300"
+                          }`}
+                        ></div>
                         <span>Uploading...</span>
                       </>
                     ) : (
@@ -521,7 +570,7 @@ export default function Media() {
               <button
                 onClick={handleAddOrUpdate}
                 className={`cursor-pointer flex items-center justify-center gap-2 lg:gap-3 px-6 lg:px-8 py-3 lg:py-4 rounded-xl font-semibold shadow-lg transition-all duration-300 transform hover:scale-105 text-sm lg:text-base ${
-                  activeTab === "blogs" 
+                  activeTab === "blogs"
                     ? "bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white"
                     : activeTab === "audiobooks"
                     ? "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white"
@@ -550,28 +599,37 @@ export default function Media() {
                 {activeTab === "blogs" ? "Blog Posts" : activeTab} Collection
               </h3>
               <span className="text-white/60 text-sm lg:text-base">
-                {mediaData[activeTab].length} {activeTab === "blogs" ? "posts" : "items"}
+                {mediaData[activeTab].length}{" "}
+                {activeTab === "blogs" ? "posts" : "items"}
               </span>
             </div>
 
             {mediaData[activeTab].length === 0 ? (
               <div className="text-center py-8 lg:py-12">
                 <span className="text-3xl lg:text-4xl">
-                  {activeTab === "blogs" ? "📝" : activeTab === "audiobooks" ? "🎧" : "📖"}
+                  {activeTab === "blogs"
+                    ? "📝"
+                    : activeTab === "audiobooks"
+                    ? "🎧"
+                    : "📖"}
                 </span>
                 <p className="text-white/60 text-base lg:text-lg mt-3 lg:mt-4">
-                  {activeTab === "blogs" ? "No blog posts added yet." : "No items added yet."}
+                  {activeTab === "blogs"
+                    ? "No blog posts added yet."
+                    : "No items added yet."}
                 </p>
                 <p className="text-white/40 text-xs lg:text-sm mt-1 lg:mt-2">
                   Add your first item using the form above
                 </p>
               </div>
             ) : (
-              <div className={`grid gap-4 lg:gap-6 ${
-                activeTab === "blogs" 
-                  ? "grid-cols-1 lg:grid-cols-2" 
-                  : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-              }`}>
+              <div
+                className={`grid gap-4 lg:gap-6 ${
+                  activeTab === "blogs"
+                    ? "grid-cols-1 lg:grid-cols-2"
+                    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                }`}
+              >
                 {mediaData[activeTab].map((item, index) => (
                   <div
                     key={index}
@@ -590,17 +648,19 @@ export default function Media() {
                         className="w-full h-32 sm:h-40 lg:h-48 object-cover rounded-lg lg:rounded-xl mb-3 lg:mb-4 border border-white/10"
                       />
                     )}
-                    
+
                     {/* Blog Specific Content */}
                     {activeTab === "blogs" && (
                       <>
-                        <div 
+                        <div
                           className="text-white/70 text-xs lg:text-sm mb-2 lg:mb-3 line-clamp-3 prose prose-invert max-w-none"
                           dangerouslySetInnerHTML={{ __html: item.description }}
                         />
-                        <div 
+                        <div
                           className="text-white/60 text-xs lg:text-sm"
-                          dangerouslySetInnerHTML={{ __html: `By ${item.author}` }}
+                          dangerouslySetInnerHTML={{
+                            __html: `By ${item.author}`,
+                          }}
                         />
                       </>
                     )}
@@ -611,9 +671,13 @@ export default function Media() {
                         <h4 className="font-bold text-white text-lg lg:text-xl mb-1 lg:mb-2 line-clamp-2">
                           {item.title}
                         </h4>
-                        <div className={`flex items-center gap-2 text-xs lg:text-sm font-medium ${
-                          activeTab === "audiobooks" ? "text-cyan-400" : "text-green-400"
-                        }`}>
+                        <div
+                          className={`flex items-center gap-2 text-xs lg:text-sm font-medium ${
+                            activeTab === "audiobooks"
+                              ? "text-cyan-400"
+                              : "text-green-400"
+                          }`}
+                        >
                           <span>
                             {activeTab === "audiobooks" ? "🎵" : "📚"}
                           </span>

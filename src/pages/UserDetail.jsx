@@ -13,7 +13,7 @@ export default function UserDetail() {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    const u = users.find(u => u.id === parseInt(id));
+    const u = users.find((u) => u.id === parseInt(id));
     if (u) {
       setUser(u);
       setStatus(u.status);
@@ -23,11 +23,9 @@ export default function UserDetail() {
 
   // Existing functions remain the same...
   const handleStatusChange = () => {
-    setUsers(prev =>
-      prev.map(u =>
-        u.id === user.id
-          ? { ...u, status: status, targetDays: targetDays }
-          : u
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === user.id ? { ...u, status: status, targetDays: targetDays } : u
       )
     );
     setIsEditing(false);
@@ -44,21 +42,23 @@ export default function UserDetail() {
   };
 
   const handleBlockUser = () => {
-    setUsers(prev =>
-      prev.map(u =>
-        u.id === user.id
-          ? { ...u, isBlocked: !u.isBlocked }
-          : u
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === user.id ? { ...u, isBlocked: !u.isBlocked } : u
       )
     );
-    
-    setUser(prev => ({ ...prev, isBlocked: !prev.isBlocked }));
+
+    setUser((prev) => ({ ...prev, isBlocked: !prev.isBlocked }));
   };
 
   const handleDeleteUser = () => {
-    if (window.confirm(`Are you sure you want to delete ${user.name}? This action cannot be undone.`)) {
-      setUsers(prev => prev.filter(u => u.id !== user.id));
-      navigate('/users');
+    if (
+      window.confirm(
+        `Are you sure you want to delete ${user.name}? This action cannot be undone.`
+      )
+    ) {
+      setUsers((prev) => prev.filter((u) => u.id !== user.id));
+      navigate("/users");
     }
   };
 
@@ -99,10 +99,17 @@ export default function UserDetail() {
     navigate(`/users/${user.id}/privacy-policy`);
   };
 
-  if (!user) return <p className="p-4 lg:p-6 text-red-500 font-semibold text-center">User not found</p>;
+  if (!user)
+    return (
+      <p className="p-4 lg:p-6 text-red-500 font-semibold text-center">
+        User not found
+      </p>
+    );
 
-  const remainingDays = status === "Recovered" ? 0 : Math.max(targetDays - user.days, 0);
-  const overDays = status === "Recovered" ? Math.max(user.days - targetDays, 0) : 0;
+  const remainingDays =
+    status === "Recovered" ? 0 : Math.max(targetDays - user.days, 0);
+  const overDays =
+    status === "Recovered" ? Math.max(user.days - targetDays, 0) : 0;
 
   return (
     <div className="max-w-4xl mx-auto p-4 lg:p-6 space-y-4 lg:space-y-6 bg-white/10 backdrop-blur-lg rounded-xl lg:rounded-2xl border border-white/20 shadow-lg">
@@ -118,7 +125,7 @@ export default function UserDetail() {
             </span>
           )}
         </div>
-        
+
         <div className="flex flex-wrap gap-2 w-full lg:w-auto">
           {!isEditing ? (
             <>
@@ -128,18 +135,18 @@ export default function UserDetail() {
               >
                 Edit User
               </button>
-              
+
               <button
                 onClick={handleBlockUser}
                 className={`flex-1 lg:flex-none px-3 lg:px-4 py-2 rounded-lg transition text-sm lg:text-base ${
-                  user.isBlocked 
-                    ? 'bg-yellow-600 hover:bg-yellow-700' 
-                    : 'bg-orange-600 hover:bg-orange-700'
+                  user.isBlocked
+                    ? "bg-yellow-600 hover:bg-yellow-700"
+                    : "bg-orange-600 hover:bg-orange-700"
                 } text-white`}
               >
-                {user.isBlocked ? 'Unblock' : 'Block'}
+                {user.isBlocked ? "Unblock" : "Block"}
               </button>
-              
+
               <button
                 onClick={handleDeleteUser}
                 className="flex-1 lg:flex-none px-3 lg:px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white transition text-sm lg:text-base"
@@ -170,44 +177,74 @@ export default function UserDetail() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
         {/* Basic Info */}
         <div className="p-3 lg:p-4 bg-white/5 rounded-xl border border-white/10 shadow-inner space-y-2 lg:space-y-3">
-          <h2 className="text-lg lg:text-xl font-semibold text-indigo-300 mb-2 lg:mb-3">Basic Information</h2>
-          <p className="text-sm lg:text-base"><span className="font-semibold text-white">ID:</span> {user.id}</p>
-          <p className="text-sm lg:text-base"><span className="font-semibold text-white">Days Completed:</span> {user.days}</p>
-          <p className="text-sm lg:text-base"><span className="font-semibold text-white">Email:</span> {user.email || 'N/A'}</p>
-          <p className="text-sm lg:text-base"><span className="font-semibold text-white">Join Date:</span> {user.joinDate || 'N/A'}</p>
+          <h2 className="text-lg lg:text-xl font-semibold text-indigo-300 mb-2 lg:mb-3">
+            Basic Information
+          </h2>
+          <p className="text-sm lg:text-base">
+            <span className="font-semibold text-white">ID:</span> {user.id}
+          </p>
+          <p className="text-sm lg:text-base">
+            <span className="font-semibold text-white">Days Completed:</span>{" "}
+            {user.days}
+          </p>
+          <p className="text-sm lg:text-base">
+            <span className="font-semibold text-white">Email:</span>{" "}
+            {user.email || "N/A"}
+          </p>
+          <p className="text-sm lg:text-base">
+            <span className="font-semibold text-white">Join Date:</span>{" "}
+            {user.joinDate || "N/A"}
+          </p>
         </div>
 
         {/* Status & Target Days */}
         <div className="p-3 lg:p-4 bg-white/5 rounded-xl border border-white/10 shadow-inner space-y-3 lg:space-y-4">
-          <h2 className="text-lg lg:text-xl font-semibold text-indigo-300 mb-2 lg:mb-3">Recovery Status</h2>
-          
+          <h2 className="text-lg lg:text-xl font-semibold text-indigo-300 mb-2 lg:mb-3">
+            Recovery Status
+          </h2>
+
           <div className="space-y-2">
-            <label className="font-semibold text-white block text-sm lg:text-base">Status:</label>
+            <label className="font-semibold text-white block text-sm lg:text-base">
+              Status:
+            </label>
             {isEditing ? (
               <select
                 value={status}
-                onChange={e => setStatus(e.target.value)}
+                onChange={(e) => setStatus(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 border border-white/20 appearance-none cursor-pointer text-sm lg:text-base"
               >
-                <option value="Recovered" className="bg-gray-800 text-white">Recovered</option>
-                <option value="Not Recovered" className="bg-gray-800 text-white">Not Recovered</option>
+                <option value="Recovered" className="bg-gray-800 text-white">
+                  Recovered
+                </option>
+                <option
+                  value="Not Recovered"
+                  className="bg-gray-800 text-white"
+                >
+                  Not Recovered
+                </option>
               </select>
             ) : (
-              <div className={`px-3 py-2 rounded-lg text-sm lg:text-base ${
-                status === "Recovered" ? "bg-green-500/20 text-green-300" : "bg-yellow-500/20 text-yellow-300"
-              }`}>
+              <div
+                className={`px-3 py-2 rounded-lg text-sm lg:text-base ${
+                  status === "Recovered"
+                    ? "bg-green-500/20 text-green-300"
+                    : "bg-yellow-500/20 text-yellow-300"
+                }`}
+              >
                 {status}
               </div>
             )}
           </div>
 
           <div className="space-y-2">
-            <label className="font-semibold text-white block text-sm lg:text-base">Target Days:</label>
+            <label className="font-semibold text-white block text-sm lg:text-base">
+              Target Days:
+            </label>
             {isEditing ? (
               <input
                 type="number"
                 value={targetDays}
-                onChange={e => setTargetDays(parseInt(e.target.value) || 0)}
+                onChange={(e) => setTargetDays(parseInt(e.target.value) || 0)}
                 className="w-full px-3 py-2 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 border border-white/20 placeholder-gray-400 text-sm lg:text-base"
                 min="0"
                 placeholder="Enter target days"
@@ -222,31 +259,54 @@ export default function UserDetail() {
 
         {/* Progress & Analytics */}
         <div className="p-3 lg:p-4 bg-white/5 rounded-xl border border-white/10 shadow-inner space-y-2 lg:space-y-3">
-          <h2 className="text-lg lg:text-xl font-semibold text-indigo-300 mb-2 lg:mb-3">Progress Analytics</h2>
-          
+          <h2 className="text-lg lg:text-xl font-semibold text-indigo-300 mb-2 lg:mb-3">
+            Progress Analytics
+          </h2>
+
           {status === "Recovered" ? (
             <>
-              <p className="text-sm lg:text-base"><span className="font-semibold text-green-300">Recovered in:</span> {user.days} days</p>
+              <p className="text-sm lg:text-base">
+                <span className="font-semibold text-green-300">
+                  Recovered in:
+                </span>{" "}
+                {user.days} days
+              </p>
               {overDays > 0 ? (
-                <p className="text-red-400 text-sm lg:text-base"><span className="font-semibold">Over target by:</span> {overDays} days</p>
+                <p className="text-red-400 text-sm lg:text-base">
+                  <span className="font-semibold">Over target by:</span>{" "}
+                  {overDays} days
+                </p>
               ) : (
-                <p className="text-green-400 text-sm lg:text-base"><span className="font-semibold">Recovered before target by:</span> {Math.max(targetDays - user.days, 0)} days</p>
+                <p className="text-green-400 text-sm lg:text-base">
+                  <span className="font-semibold">
+                    Recovered before target by:
+                  </span>{" "}
+                  {Math.max(targetDays - user.days, 0)} days
+                </p>
               )}
             </>
           ) : (
-            <p className="text-yellow-300 text-sm lg:text-base"><span className="font-semibold">Remaining days:</span> {remainingDays}</p>
+            <p className="text-yellow-300 text-sm lg:text-base">
+              <span className="font-semibold">Remaining days:</span>{" "}
+              {remainingDays}
+            </p>
           )}
-          
+
           <div className="mt-3 lg:mt-4">
             <div className="flex justify-between text-xs lg:text-sm text-white mb-1">
               <span>Progress</span>
-              <span>{user.days}/{targetDays} days</span>
+              <span>
+                {user.days}/{targetDays} days
+              </span>
             </div>
             <div className="w-full bg-white/10 rounded-full h-2">
-              <div 
+              <div
                 className="bg-indigo-500 h-2 rounded-full transition-all duration-300"
-                style={{ 
-                  width: targetDays > 0 ? `${Math.min((user.days / targetDays) * 100, 100)}%` : '0%' 
+                style={{
+                  width:
+                    targetDays > 0
+                      ? `${Math.min((user.days / targetDays) * 100, 100)}%`
+                      : "0%",
                 }}
               ></div>
             </div>
@@ -255,20 +315,25 @@ export default function UserDetail() {
       </div>
 
       {/* Activities Section */}
-      {status === "Recovered" && user.activities && user.activities.length > 0 && (
-        <div className="p-3 lg:p-4 bg-white/5 rounded-xl border border-white/10 shadow-inner">
-          <h2 className="text-lg lg:text-xl font-semibold text-indigo-300 mb-2 lg:mb-3">
-            Activities that helped recovery
-          </h2>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {user.activities.map((act, i) => (
-              <li key={i} className="px-3 py-2 bg-white/10 rounded-lg text-gray-200 hover:bg-white/20 transition text-sm lg:text-base">
-                {act}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {status === "Recovered" &&
+        user.activities &&
+        user.activities.length > 0 && (
+          <div className="p-3 lg:p-4 bg-white/5 rounded-xl border border-white/10 shadow-inner">
+            <h2 className="text-lg lg:text-xl font-semibold text-indigo-300 mb-2 lg:mb-3">
+              Activities that helped recovery
+            </h2>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {user.activities.map((act, i) => (
+                <li
+                  key={i}
+                  className="px-3 py-2 bg-white/10 rounded-lg text-gray-200 hover:bg-white/20 transition text-sm lg:text-base"
+                >
+                  {act}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
       {/* ✅ Full Width Buttons - WITH ACHIEVEMENTS BUTTON ADDED */}
       <div className="space-y-3 lg:space-y-4">
@@ -280,7 +345,9 @@ export default function UserDetail() {
           <span className="text-xl lg:text-2xl">📊</span>
           <span className="text-left">
             <span className="block">View Recovery History</span>
-            <span className="text-xs lg:text-sm font-normal opacity-90">Analytics & Progress Tracking</span>
+            <span className="text-xs lg:text-sm font-normal opacity-90">
+              Analytics & Progress Tracking
+            </span>
           </span>
         </button>
 
@@ -292,7 +359,9 @@ export default function UserDetail() {
           <span className="text-xl lg:text-2xl">📝</span>
           <span className="text-left">
             <span className="block">View User Posts</span>
-            <span className="text-xs lg:text-sm font-normal opacity-90">Updates & Journal Entries</span>
+            <span className="text-xs lg:text-sm font-normal opacity-90">
+              Updates & Journal Entries
+            </span>
           </span>
         </button>
 
@@ -304,7 +373,9 @@ export default function UserDetail() {
           <span className="text-xl lg:text-2xl">💰</span>
           <span className="text-left">
             <span className="block">Financial Summary</span>
-            <span className="text-xs lg:text-sm font-normal opacity-90">Expenses & Budget Tracking</span>
+            <span className="text-xs lg:text-sm font-normal opacity-90">
+              Expenses & Budget Tracking
+            </span>
           </span>
         </button>
 
@@ -316,7 +387,9 @@ export default function UserDetail() {
           <span className="text-xl lg:text-2xl">🌬️</span>
           <span className="text-left">
             <span className="block">Breathing Activities</span>
-            <span className="text-xs lg:text-sm font-normal opacity-90">Exercises & Techniques</span>
+            <span className="text-xs lg:text-sm font-normal opacity-90">
+              Exercises & Techniques
+            </span>
           </span>
         </button>
 
@@ -328,7 +401,9 @@ export default function UserDetail() {
           <span className="text-xl lg:text-2xl">🚶‍♂️</span>
           <span className="text-left">
             <span className="block">Walking Activities</span>
-            <span className="text-xs lg:text-sm font-normal opacity-90">Progress & Tracking</span>
+            <span className="text-xs lg:text-sm font-normal opacity-90">
+              Progress & Tracking
+            </span>
           </span>
         </button>
 
@@ -340,7 +415,9 @@ export default function UserDetail() {
           <span className="text-xl lg:text-2xl">🏅</span>
           <span className="text-left">
             <span className="block">View User Achievements</span>
-            <span className="text-xs lg:text-sm font-normal opacity-90">Milestones & Badges</span>
+            <span className="text-xs lg:text-sm font-normal opacity-90">
+              Milestones & Badges
+            </span>
           </span>
         </button>
 
@@ -352,7 +429,9 @@ export default function UserDetail() {
           <span className="text-xl lg:text-2xl">🏆</span>
           <span className="text-left">
             <span className="block">View User Activities</span>
-            <span className="text-xs lg:text-sm font-normal opacity-90">Progress & Engagement</span>
+            <span className="text-xs lg:text-sm font-normal opacity-90">
+              Progress & Engagement
+            </span>
           </span>
         </button>
       </div>

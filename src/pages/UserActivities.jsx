@@ -1,66 +1,66 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useUsers } from '../context/UsersContext';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useUsers } from "../context/UsersContext";
 
 const Activities = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { users } = useUsers();
-  
+
   const [user, setUser] = useState(null);
   const [activities, setActivities] = useState([]);
 
   useEffect(() => {
-    const u = users.find(u => u.id === parseInt(id));
+    const u = users.find((u) => u.id === parseInt(id));
     if (u) {
       setUser(u);
       // Sample activities data - you can replace this with actual data from your context
       setActivities([
         {
           id: 1,
-          name: 'Morning Meditation',
-          type: 'Mindfulness',
-          duration: '15 minutes',
-          date: '2024-01-15',
-          status: 'Completed',
-          points: 50
+          name: "Morning Meditation",
+          type: "Mindfulness",
+          duration: "15 minutes",
+          date: "2024-01-15",
+          status: "Completed",
+          points: 50,
         },
         {
           id: 2,
-          name: 'Evening Walk',
-          type: 'Exercise',
-          duration: '30 minutes',
-          date: '2024-01-15',
-          status: 'Completed',
-          points: 30
+          name: "Evening Walk",
+          type: "Exercise",
+          duration: "30 minutes",
+          date: "2024-01-15",
+          status: "Completed",
+          points: 30,
         },
         {
           id: 3,
-          name: 'Breathing Exercise',
-          type: 'Wellness',
-          duration: '10 minutes',
-          date: '2024-01-14',
-          status: 'Completed',
-          points: 20
+          name: "Breathing Exercise",
+          type: "Wellness",
+          duration: "10 minutes",
+          date: "2024-01-14",
+          status: "Completed",
+          points: 20,
         },
         {
           id: 4,
-          name: 'Yoga Session',
-          type: 'Exercise',
-          duration: '45 minutes',
-          date: '2024-01-14',
-          status: 'Completed',
-          points: 60
+          name: "Yoga Session",
+          type: "Exercise",
+          duration: "45 minutes",
+          date: "2024-01-14",
+          status: "Completed",
+          points: 60,
         },
         {
           id: 5,
-          name: 'Reading Therapy',
-          type: 'Mental Health',
-          duration: '20 minutes',
-          date: '2024-01-13',
-          status: 'Completed',
-          points: 40
-        }
+          name: "Reading Therapy",
+          type: "Mental Health",
+          duration: "20 minutes",
+          date: "2024-01-13",
+          status: "Completed",
+          points: 40,
+        },
       ]);
     }
   }, [id, users]);
@@ -71,11 +71,16 @@ const Activities = () => {
 
   const getActivityTypeColor = (type) => {
     switch (type) {
-      case 'Mindfulness': return 'bg-purple-500/20 text-purple-300';
-      case 'Exercise': return 'bg-blue-500/20 text-blue-300';
-      case 'Wellness': return 'bg-green-500/20 text-green-300';
-      case 'Mental Health': return 'bg-pink-500/20 text-pink-300';
-      default: return 'bg-gray-500/20 text-gray-300';
+      case "Mindfulness":
+        return "bg-purple-500/20 text-purple-300";
+      case "Exercise":
+        return "bg-blue-500/20 text-blue-300";
+      case "Wellness":
+        return "bg-green-500/20 text-green-300";
+      case "Mental Health":
+        return "bg-pink-500/20 text-pink-300";
+      default:
+        return "bg-gray-500/20 text-gray-300";
     }
   };
 
@@ -87,8 +92,13 @@ const Activities = () => {
     );
   }
 
-  const totalPoints = activities.reduce((sum, activity) => sum + activity.points, 0);
-  const completedActivities = activities.filter(activity => activity.status === 'Completed').length;
+  const totalPoints = activities.reduce(
+    (sum, activity) => sum + activity.points,
+    0
+  );
+  const completedActivities = activities.filter(
+    (activity) => activity.status === "Completed"
+  ).length;
 
   return (
     <div className="min-h-screen p-4 lg:p-6">
@@ -116,46 +126,67 @@ const Activities = () => {
           <div className="bg-gradient-to-br from-pink-500/10 to-rose-500/10 rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-pink-500/20">
             <div className="text-center">
               <div className="text-2xl lg:text-3xl mb-2">🏆</div>
-              <h3 className="text-white font-semibold mb-2 text-sm lg:text-base">Total Points</h3>
-              <p className="text-pink-300 text-xl lg:text-3xl font-bold">{totalPoints}</p>
+              <h3 className="text-white font-semibold mb-2 text-sm lg:text-base">
+                Total Points
+              </h3>
+              <p className="text-pink-300 text-xl lg:text-3xl font-bold">
+                {totalPoints}
+              </p>
               <p className="text-white/60 text-xs lg:text-sm">Points earned</p>
             </div>
           </div>
           <div className="bg-gradient-to-br from-purple-500/10 to-indigo-500/10 rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-purple-500/20">
             <div className="text-center">
               <div className="text-2xl lg:text-3xl mb-2">✅</div>
-              <h3 className="text-white font-semibold mb-2 text-sm lg:text-base">Activities Completed</h3>
-              <p className="text-purple-300 text-xl lg:text-3xl font-bold">{completedActivities}</p>
-              <p className="text-white/60 text-xs lg:text-sm">Total activities</p>
+              <h3 className="text-white font-semibold mb-2 text-sm lg:text-base">
+                Activities Completed
+              </h3>
+              <p className="text-purple-300 text-xl lg:text-3xl font-bold">
+                {completedActivities}
+              </p>
+              <p className="text-white/60 text-xs lg:text-sm">
+                Total activities
+              </p>
             </div>
           </div>
           <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-blue-500/20">
             <div className="text-center">
               <div className="text-2xl lg:text-3xl mb-2">📊</div>
-              <h3 className="text-white font-semibold mb-2 text-sm lg:text-base">Success Rate</h3>
+              <h3 className="text-white font-semibold mb-2 text-sm lg:text-base">
+                Success Rate
+              </h3>
               <p className="text-blue-300 text-xl lg:text-3xl font-bold">
-                {activities.length > 0 ? Math.round((completedActivities / activities.length) * 100) : 0}%
+                {activities.length > 0
+                  ? Math.round((completedActivities / activities.length) * 100)
+                  : 0}
+                %
               </p>
-              <p className="text-white/60 text-xs lg:text-sm">Completion rate</p>
+              <p className="text-white/60 text-xs lg:text-sm">
+                Completion rate
+              </p>
             </div>
           </div>
         </div>
 
         {/* Activities List */}
         <div className="bg-white/10 backdrop-blur-lg rounded-xl lg:rounded-2xl border border-white/20 shadow-xl p-4 lg:p-8">
-          <h2 className="text-xl lg:text-2xl font-bold text-white mb-4 lg:mb-6">Recent Activities</h2>
-          
+          <h2 className="text-xl lg:text-2xl font-bold text-white mb-4 lg:mb-6">
+            Recent Activities
+          </h2>
+
           {activities.length === 0 ? (
             <div className="text-center py-8 lg:py-12">
               <span className="text-3xl lg:text-4xl">📝</span>
-              <p className="text-white/60 text-base lg:text-lg mt-3 lg:mt-4">No activities recorded yet.</p>
+              <p className="text-white/60 text-base lg:text-lg mt-3 lg:mt-4">
+                No activities recorded yet.
+              </p>
               <p className="text-white/40 text-sm mt-1 lg:mt-2">
                 Activities will appear here as user completes them
               </p>
             </div>
           ) : (
             <div className="space-y-3 lg:space-y-4">
-              {activities.map(activity => (
+              {activities.map((activity) => (
                 <div
                   key={activity.id}
                   className="bg-gradient-to-br from-pink-500/5 to-rose-500/5 rounded-lg lg:rounded-xl p-4 lg:p-6 border border-pink-500/10 hover:border-pink-500/20 transition-all duration-300"
@@ -163,8 +194,14 @@ const Activities = () => {
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 lg:gap-4">
                     <div className="flex-1">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 lg:gap-3 mb-2">
-                        <h3 className="text-white font-bold text-base lg:text-lg">{activity.name}</h3>
-                        <span className={`px-2 lg:px-3 py-1 rounded-full text-xs font-medium ${getActivityTypeColor(activity.type)} self-start sm:self-auto`}>
+                        <h3 className="text-white font-bold text-base lg:text-lg">
+                          {activity.name}
+                        </h3>
+                        <span
+                          className={`px-2 lg:px-3 py-1 rounded-full text-xs font-medium ${getActivityTypeColor(
+                            activity.type
+                          )} self-start sm:self-auto`}
+                        >
                           {activity.type}
                         </span>
                       </div>
@@ -185,7 +222,9 @@ const Activities = () => {
                     </div>
                     <div className="flex items-center gap-3 lg:gap-4 mt-2 md:mt-0">
                       <div className="text-center">
-                        <span className="text-pink-300 font-bold text-lg lg:text-xl">{activity.points}</span>
+                        <span className="text-pink-300 font-bold text-lg lg:text-xl">
+                          {activity.points}
+                        </span>
                         <p className="text-white/60 text-xs">points</p>
                       </div>
                     </div>

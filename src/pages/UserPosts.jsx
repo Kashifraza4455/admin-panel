@@ -15,7 +15,11 @@ export default function UserPosts() {
   }, [id, users]);
 
   if (!user)
-    return <p className="p-4 lg:p-6 text-red-500 font-semibold text-center">User not found</p>;
+    return (
+      <p className="p-4 lg:p-6 text-red-500 font-semibold text-center">
+        User not found
+      </p>
+    );
 
   // Sample posts data
   const userPosts = user.posts || [
@@ -110,7 +114,9 @@ export default function UserPosts() {
                 userPosts.length
             ) || 0}
           </div>
-          <div className="text-xs lg:text-sm text-yellow-200">Avg Likes/Post</div>
+          <div className="text-xs lg:text-sm text-yellow-200">
+            Avg Likes/Post
+          </div>
         </div>
       </div>
 

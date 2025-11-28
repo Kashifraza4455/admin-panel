@@ -22,8 +22,11 @@ export default function Users() {
           </thead>
 
           <tbody>
-            {users.map(user => (
-              <tr key={user.id} className="border-b border-white/5 hover:bg-white/5">
+            {users.map((user) => (
+              <tr
+                key={user.id}
+                className="border-b border-white/5 hover:bg-white/5"
+              >
                 <td className="p-4">{user.id}</td>
                 <td className="p-4">{user.name}</td>
                 <td className="p-4">
@@ -54,9 +57,9 @@ export default function Users() {
 
       {/* Mobile Cards */}
       <div className="lg:hidden space-y-4">
-        {users.map(user => (
-          <div 
-            key={user.id} 
+        {users.map((user) => (
+          <div
+            key={user.id}
             className="bg-white/10 backdrop-blur-lg rounded-xl border border-white/10 p-4 hover:bg-white/5 transition"
           >
             <div className="flex justify-between items-start mb-3">
@@ -74,7 +77,7 @@ export default function Users() {
                 {user.status}
               </span>
             </div>
-            
+
             <div className="flex justify-between items-center">
               <div>
                 <p className="text-gray-300 text-sm">Days Clean</p>
